@@ -16,6 +16,10 @@
             android:name=".Friend_Item"
             android:exported="false" />
         <activity
+            android:name=".MainActivity2"
+            android:exported="false"
+            android:theme="@style/Theme.SocialMediaApp" />
+        <activity
             android:name=".ChangePass"
             android:exported="false" />
         <activity
