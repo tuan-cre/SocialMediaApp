@@ -1,8 +1,10 @@
 package com.example.socialmediaapp;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +22,7 @@ public class Profile extends AppCompatActivity {
     private static final String TAG = "ProfileActivity";
 
     TextView lblName_Profile, lblNgaySinh_Profile, lblGioiTinh_Profile, lblQueQuan_Profile, lblTrinhDo_Profile, lblTrangThai_Profile;
+    Button btnReturn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,13 @@ public class Profile extends AppCompatActivity {
         lblQueQuan_Profile = findViewById(R.id.lblQueQuan_Profile);
         lblTrinhDo_Profile = findViewById(R.id.lblTrinhDo_Profile);
         lblTrangThai_Profile = findViewById(R.id.lblTrangThai_Profile);
+        btnReturn = findViewById(R.id.btnReturn);
+
+        btnReturn.setOnClickListener(v -> {
+            startActivity(new Intent(Profile.this, MainActivity2.class));
+            finish();
+        });
+
 
         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         int taiKhoanId = prefs.getInt("tai_khoan_id", -1);
