@@ -15,7 +15,6 @@ import androidx.core.view.WindowInsetsCompat;
 
 import org.json.JSONObject;
 
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -78,11 +77,19 @@ public class Register extends AppCompatActivity {
             try {
                 JSONObject requestData = new JSONObject();
                 requestData.put("hoten", fullName);
-                requestData.put("username", username);
                 requestData.put("email", email);
+                requestData.put("username", username);
                 requestData.put("password", password);
 
+                Log.d(TAG, "Request data: " + requestData.toString());
+
                 JSONObject response = ApiClient.post("register.php", requestData);
+
+                if (response == null) {
+                    throw new Exception("Null response from server");
+                }
+
+                Log.d(TAG, "Server response: " + response.toString());
 
                 runOnUiThread(() -> {
                     progressBar.setVisibility(ProgressBar.INVISIBLE);
@@ -93,7 +100,7 @@ public class Register extends AppCompatActivity {
                 runOnUiThread(() -> {
                     progressBar.setVisibility(ProgressBar.INVISIBLE);
                     Log.e(TAG, "Registration error", e);
-                    Toast.makeText(Register.this, "Lỗi đăng ký: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Register.this, "Lỗi đăng ký: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
             }
         });
