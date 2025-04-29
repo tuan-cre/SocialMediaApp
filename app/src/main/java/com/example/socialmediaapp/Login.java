@@ -88,8 +88,10 @@ public class Login extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         prefs.edit()
                 .putBoolean("isLoggedIn", true)
+                .putInt("tai_khoan_id", taiKhoanId)
                 .apply();
     }
+
 
     private void login(String username, String password) {
         String hashedPassword = hashPassword(password);
