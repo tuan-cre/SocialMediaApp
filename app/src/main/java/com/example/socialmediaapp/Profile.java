@@ -1,5 +1,6 @@
 package com.example.socialmediaapp;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -10,6 +11,8 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class Profile extends AppCompatActivity {
 
+    SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+    int taiKhoanId = prefs.getInt("tai_khoan_id", -1); // default -1 if not found
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

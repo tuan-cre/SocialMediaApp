@@ -84,7 +84,7 @@ public class Login extends AppCompatActivity {
         return prefs.getBoolean("isLoggedIn", false);
     }
 
-    private void saveSession() {
+    private void saveSession(int taiKhoanId) {
         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         prefs.edit()
                 .putBoolean("isLoggedIn", true)
@@ -148,16 +148,18 @@ public class Login extends AppCompatActivity {
             String message = response.getString("message");
 
             if (success) {
-                Log.i(TAG, "Login successful");
-                Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
+                // Extract user ID
+                int taiKhoanId = response.getInt("tai_khoan_id");
 
-                // Save session (logged in state)
-                saveSession();
+                // Save session (logged in state + ID)
+                saveSession(taiKhoanId);
+
+                Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
 
                 // Proceed to the main activity
                 Intent intent = new Intent(Login.this, MainActivity2.class);
                 startActivity(intent);
-                finish(); // Close the login screen
+                finish();
             } else {
                 Log.w(TAG, "Login failed: " + message);
                 Toast.makeText(Login.this, message, Toast.LENGTH_SHORT).show();
@@ -167,4 +169,5 @@ public class Login extends AppCompatActivity {
             Toast.makeText(Login.this, "Response error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
+
 }
