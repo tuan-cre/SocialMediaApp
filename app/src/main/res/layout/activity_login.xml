@@ -60,7 +60,7 @@
         app:layout_constraintTop_toBottomOf="@+id/txtTendangnhap" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/txtBackToLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="11dp"
@@ -70,7 +70,7 @@
         app:layout_constraintTop_toBottomOf="@+id/txtMatkhau" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/txtCreateNewAccount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="142dp"
