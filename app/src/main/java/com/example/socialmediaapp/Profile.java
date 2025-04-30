@@ -61,6 +61,7 @@ public class Profile extends AppCompatActivity {
         btnHuy = findViewById(R.id.btnHuy);
         btnChinhSua_Profile = findViewById(R.id.btnChinhSua_Profile);
         img_Profile = findViewById(R.id.img_Profile);
+        img_Profile.setEnabled(false);
 
         btnReturn.setOnClickListener(v -> {
             startActivity(new Intent(Profile.this, MainActivity2.class));
@@ -107,6 +108,7 @@ public class Profile extends AppCompatActivity {
             lblGioiTinh_Profile.setEnabled(true);
             lblQueQuan_Profile.setEnabled(true);
             lblTrinhDo_Profile.setEnabled(true);
+            img_Profile.setEnabled(true);
         });
 
         if (taiKhoanId == -1) {
@@ -225,5 +227,6 @@ public class Profile extends AppCompatActivity {
         lblGioiTinh_Profile.setEnabled(false);
         lblQueQuan_Profile.setEnabled(false);
         lblTrinhDo_Profile.setEnabled(false);
+        img_Profile.setEnabled(false);
     }
 }

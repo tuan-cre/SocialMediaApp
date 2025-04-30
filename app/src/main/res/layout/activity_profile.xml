@@ -12,13 +12,13 @@
         android:layout_width="345dp"
         android:layout_height="45dp"
         android:layout_marginStart="50dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
         android:background="@null"
         android:enabled="false"
         android:text="Họ và tên"
         android:textSize="30dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/img_Profile" />
 
     <ImageView
         android:id="@+id/img_Profile"
@@ -37,10 +37,10 @@
         android:layout_width="340dp"
         android:layout_height="140dp"
         android:layout_marginStart="50dp"
-        android:layout_marginBottom="380dp"
+        android:layout_marginTop="10dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lblName_Profile">
 
         <EditText
             android:id="@+id/lblNgaySinh_Profile"
@@ -94,30 +94,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="116dp"
-        android:layout_marginBottom="280dp"
+        android:layout_marginTop="52dp"
         android:text="Chỉnh sửa thông tin"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
     <ListView
         android:id="@+id/lstViewLichSu_Profile"
         android:layout_width="340dp"
         android:layout_height="190dp"
         android:layout_marginStart="48dp"
-        android:layout_marginBottom="48dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lblLichSu_Profile" />
 
     <TextView
         android:id="@+id/lblLichSu_Profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="48dp"
-        android:layout_marginBottom="236dp"
+        android:layout_marginTop="17dp"
         android:text="Lịch sử bài viết"
         android:textSize="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnChinhSua_Profile" />
 
     <Button
         android:id="@+id/btnReturn"
