@@ -3,7 +3,6 @@ package com.example.socialmediaapp;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -12,7 +11,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -24,6 +22,10 @@ import androidx.core.view.WindowInsetsCompat;
 
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.FileOutputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -33,6 +35,8 @@ public class Profile extends AppCompatActivity {
     EditText lblName_Profile, lblNgaySinh_Profile, lblGioiTinh_Profile, lblQueQuan_Profile, lblTrinhDo_Profile, lblTrangThai_Profile;
     Button btnReturn, btnLuu, btnHuy, btnChinhSua_Profile;
     ImageView img_Profile;
+
+    private Uri selectedImageUri = null;
     private ActivityResultLauncher<Intent> imagePickerLauncher;
 
     @Override
@@ -81,8 +85,8 @@ public class Profile extends AppCompatActivity {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent data = result.getData();
                         if (data != null && data.getData() != null) {
-                            Uri imageUri = data.getData();
-                            img_Profile.setImageURI(imageUri);  // Set to ImageView or upload, etc.
+                            selectedImageUri = data.getData();
+                            img_Profile.setImageURI(selectedImageUri);
                         }
                     }
                 }
@@ -91,9 +95,8 @@ public class Profile extends AppCompatActivity {
         img_Profile.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             intent.setType("image/*");
-            imagePickerLauncher.launch(intent);  // Modern way to launch
+            imagePickerLauncher.launch(intent);
         });
-
 
         btnChinhSua_Profile.setOnClickListener(v -> {
             btnChinhSua_Profile.setVisibility(View.INVISIBLE);
@@ -128,6 +131,12 @@ public class Profile extends AppCompatActivity {
                     if (response != null && response.optBoolean("success", false)) {
                         JSONObject user = response.optJSONObject("user");
                         if (user != null) {
+                            String imgUrl = user.optString("url_anh_dai_dien", "");
+                            if (!imgUrl.isEmpty()) {
+                                ApiClient.loadImageFromUrl(imgUrl, img_Profile);
+                            } else {
+                                img_Profile.setImageResource(R.drawable.img_profile);
+                            }
                             img_Profile.setImageResource(R.drawable.img_profile);
                             lblName_Profile.setText(user.optString("ho_ten", ""));
                             lblNgaySinh_Profile.setText(user.optString("ngay_sinh", ""));
@@ -163,6 +172,13 @@ public class Profile extends AppCompatActivity {
 
                 JSONObject response = ApiClient.post("update_profile.php", requestData);
 
+                if (selectedImageUri != null) {
+                    File file = createTempFileFromUri(selectedImageUri);
+                    if (file != null) {
+                        ApiClient.uploadFile("update_profile_image.php", file, taiKhoanId);
+                    }
+                }
+
                 runOnUiThread(() -> {
                     if (response != null && response.optBoolean("success", false)) {
                         Toast.makeText(Profile.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
@@ -170,17 +186,36 @@ public class Profile extends AppCompatActivity {
                         cancelEdit();
                     } else {
                         Toast.makeText(Profile.this, "Failed to update profile", Toast.LENGTH_SHORT).show();
-                        Log.e(TAG, "Failed to update profile: " + response.optString("message", "Unknown error"));
                     }
                 });
             } catch (Exception e) {
                 runOnUiThread(() -> {
                     Toast.makeText(Profile.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    Log.e(TAG, "Error fetching profile", e);
+                    Log.e(TAG, "Error updating profile", e);
                 });
             }
         });
     }
+
+    private File createTempFileFromUri(Uri uri) {
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(uri);
+            File tempFile = File.createTempFile("upload_", ".jpg", getCacheDir());
+            OutputStream outputStream = new FileOutputStream(tempFile);
+            byte[] buffer = new byte[4096];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+            outputStream.close();
+            inputStream.close();
+            return tempFile;
+        } catch (Exception e) {
+            Log.e(TAG, "Error creating temp file", e);
+            return null;
+        }
+    }
+
     private void cancelEdit() {
         btnChinhSua_Profile.setVisibility(View.VISIBLE);
         btnLuu.setVisibility(View.INVISIBLE);
