@@ -1,9 +1,12 @@
 package com.example.socialmediaapp;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -12,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -28,6 +33,7 @@ public class Profile extends AppCompatActivity {
     EditText lblName_Profile, lblNgaySinh_Profile, lblGioiTinh_Profile, lblQueQuan_Profile, lblTrinhDo_Profile, lblTrangThai_Profile;
     Button btnReturn, btnLuu, btnHuy, btnChinhSua_Profile;
     ImageView img_Profile;
+    private ActivityResultLauncher<Intent> imagePickerLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +74,26 @@ public class Profile extends AppCompatActivity {
             cancelEdit();
             fetchProfile(taiKhoanId);
         });
+
+        imagePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        if (data != null && data.getData() != null) {
+                            Uri imageUri = data.getData();
+                            img_Profile.setImageURI(imageUri);  // Set to ImageView or upload, etc.
+                        }
+                    }
+                }
+        );
+
+        img_Profile.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            intent.setType("image/*");
+            imagePickerLauncher.launch(intent);  // Modern way to launch
+        });
+
 
         btnChinhSua_Profile.setOnClickListener(v -> {
             btnChinhSua_Profile.setVisibility(View.INVISIBLE);
