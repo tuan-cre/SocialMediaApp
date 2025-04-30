@@ -7,28 +7,33 @@
     android:layout_height="match_parent"
     tools:context=".Profile">
 
-    <TextView
+    <EditText
         android:id="@+id/lblName_Profile"
         android:layout_width="345dp"
         android:layout_height="45dp"
         android:layout_marginStart="50dp"
-        android:layout_marginTop="156dp"
+        android:layout_marginBottom="10dp"
+        android:background="@null"
+        android:enabled="false"
         android:text="Họ và tên"
         android:textSize="30dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/img_Profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintHeight="300px"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth="300px"
         tools:srcCompat="@tools:sample/avatars" />
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="340dp"
         android:layout_height="140dp"
         android:layout_marginStart="50dp"
@@ -37,38 +42,48 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <TextView
+        <EditText
             android:id="@+id/lblNgaySinh_Profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@null"
+            android:enabled="false"
             android:text="Ngày sinh"
             android:textSize="20dp" />
 
-        <TextView
+        <EditText
             android:id="@+id/lblGioiTinh_Profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@null"
+            android:enabled="false"
             android:text="Giới tính"
             android:textSize="20dp" />
 
-        <TextView
+        <EditText
             android:id="@+id/lblQueQuan_Profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@null"
+            android:enabled="false"
             android:text="Quê quán"
             android:textSize="20dp" />
 
-        <TextView
+        <EditText
             android:id="@+id/lblTrinhDo_Profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@null"
+            android:enabled="false"
             android:text="Trình độ học vấn"
             android:textSize="20dp" />
 
-        <TextView
+        <EditText
             android:id="@+id/lblTrangThai_Profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@null"
+            android:enabled="false"
             android:text="Trạng thái"
             android:textSize="20dp" />
 
@@ -78,8 +93,8 @@
         android:id="@+id/btnChinhSua_Profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginBottom="316dp"
+        android:layout_marginStart="116dp"
+        android:layout_marginBottom="280dp"
         android:text="Chỉnh sửa thông tin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -88,8 +103,8 @@
         android:id="@+id/lstViewLichSu_Profile"
         android:layout_width="340dp"
         android:layout_height="190dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginBottom="84dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginBottom="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -97,8 +112,8 @@
         android:id="@+id/lblLichSu_Profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginBottom="272dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginBottom="236dp"
         android:text="Lịch sử bài viết"
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -113,5 +128,27 @@
         android:text="Return"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnLuu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="88dp"
+        android:layout_marginBottom="17dp"
+        android:text="Lưu"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/lblLichSu_Profile"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btnHuy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="74dp"
+        android:layout_marginBottom="17dp"
+        android:text="Hủy"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/lblLichSu_Profile"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
