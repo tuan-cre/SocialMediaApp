@@ -11,14 +11,20 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
     }
+
+    versionCatalogs {
+        create("libs") {
+            // No need to call 'from' if libs.versions.toml is in gradle subdirectory
+        }
+    }
 }
 
 rootProject.name = "SocialMediaApp"
 include(":app")
- 
