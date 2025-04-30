@@ -2,9 +2,13 @@ package com.example.socialmediaapp;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,8 +25,9 @@ import java.util.concurrent.Executors;
 public class Profile extends AppCompatActivity {
     private static final String TAG = "ProfileActivity";
 
-    TextView lblName_Profile, lblNgaySinh_Profile, lblGioiTinh_Profile, lblQueQuan_Profile, lblTrinhDo_Profile, lblTrangThai_Profile;
-    Button btnReturn;
+    EditText lblName_Profile, lblNgaySinh_Profile, lblGioiTinh_Profile, lblQueQuan_Profile, lblTrinhDo_Profile, lblTrangThai_Profile;
+    Button btnReturn, btnLuu, btnHuy, btnChinhSua_Profile;
+    ImageView img_Profile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +47,26 @@ public class Profile extends AppCompatActivity {
         lblTrinhDo_Profile = findViewById(R.id.lblTrinhDo_Profile);
         lblTrangThai_Profile = findViewById(R.id.lblTrangThai_Profile);
         btnReturn = findViewById(R.id.btnReturn);
+        btnLuu = findViewById(R.id.btnLuu);
+        btnHuy = findViewById(R.id.btnHuy);
+        btnChinhSua_Profile = findViewById(R.id.btnChinhSua_Profile);
+        img_Profile = findViewById(R.id.img_Profile);
 
         btnReturn.setOnClickListener(v -> {
             startActivity(new Intent(Profile.this, MainActivity2.class));
             finish();
         });
 
+        btnChinhSua_Profile.setOnClickListener(v -> {
+            btnChinhSua_Profile.setVisibility(View.INVISIBLE);
+            btnLuu.setVisibility(View.VISIBLE);
+            btnHuy.setVisibility(View.VISIBLE);
+            lblName_Profile.setEnabled(true);
+            lblNgaySinh_Profile.setEnabled(true);
+            lblGioiTinh_Profile.setEnabled(true);
+            lblQueQuan_Profile.setEnabled(true);
+            lblTrinhDo_Profile.setEnabled(true);
+        });
 
         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         int taiKhoanId = prefs.getInt("tai_khoan_id", -1);
@@ -74,6 +93,7 @@ public class Profile extends AppCompatActivity {
                     if (response != null && response.optBoolean("success", false)) {
                         JSONObject user = response.optJSONObject("user");
                         if (user != null) {
+                            img_Profile.setImageResource(R.drawable.img_profile);
                             lblName_Profile.setText(user.optString("ho_ten", ""));
                             lblNgaySinh_Profile.setText(user.optString("ngay_sinh", ""));
                             lblGioiTinh_Profile.setText(user.optString("gioi_tinh", ""));
