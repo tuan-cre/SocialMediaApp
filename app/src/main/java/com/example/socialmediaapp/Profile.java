@@ -57,6 +57,18 @@ public class Profile extends AppCompatActivity {
             finish();
         });
 
+        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        int taiKhoanId = prefs.getInt("tai_khoan_id", -1);
+
+        btnLuu.setOnClickListener(v -> {
+            updateProfile(taiKhoanId);
+        });
+
+        btnHuy.setOnClickListener(v -> {
+            cancelEdit();
+            fetchProfile(taiKhoanId);
+        });
+
         btnChinhSua_Profile.setOnClickListener(v -> {
             btnChinhSua_Profile.setVisibility(View.INVISIBLE);
             btnLuu.setVisibility(View.VISIBLE);
@@ -67,9 +79,6 @@ public class Profile extends AppCompatActivity {
             lblQueQuan_Profile.setEnabled(true);
             lblTrinhDo_Profile.setEnabled(true);
         });
-
-        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
-        int taiKhoanId = prefs.getInt("tai_khoan_id", -1);
 
         if (taiKhoanId == -1) {
             Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
@@ -98,7 +107,7 @@ public class Profile extends AppCompatActivity {
                             lblNgaySinh_Profile.setText(user.optString("ngay_sinh", ""));
                             lblGioiTinh_Profile.setText(user.optString("gioi_tinh", ""));
                             lblQueQuan_Profile.setText(user.optString("que_quan", ""));
-                            lblTrinhDo_Profile.setText(user.optString("trinh_do", ""));
+                            lblTrinhDo_Profile.setText(user.optString("trinh_do_hoc_van", ""));
                             lblTrangThai_Profile.setText(user.optString("trang_thai", ""));
                         }
                     } else {
@@ -112,5 +121,48 @@ public class Profile extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    private void updateProfile(int taiKhoanId) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            try {
+                JSONObject requestData = new JSONObject();
+                requestData.put("nguoi_dung_id", taiKhoanId);
+                requestData.put("hoten", lblName_Profile.getText().toString());
+                requestData.put("ngaysinh", lblNgaySinh_Profile.getText().toString());
+                requestData.put("gioitinh", lblGioiTinh_Profile.getText().toString());
+                requestData.put("quequan", lblQueQuan_Profile.getText().toString());
+                requestData.put("trinhdo", lblTrinhDo_Profile.getText().toString());
+
+                JSONObject response = ApiClient.post("update_profile.php", requestData);
+
+                runOnUiThread(() -> {
+                    if (response != null && response.optBoolean("success", false)) {
+                        Toast.makeText(Profile.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
+                        fetchProfile(taiKhoanId);
+                        cancelEdit();
+                    } else {
+                        Toast.makeText(Profile.this, "Failed to update profile", Toast.LENGTH_SHORT).show();
+                        Log.e(TAG, "Failed to update profile: " + response.optString("message", "Unknown error"));
+                    }
+                });
+            } catch (Exception e) {
+                runOnUiThread(() -> {
+                    Toast.makeText(Profile.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Error fetching profile", e);
+                });
+            }
+        });
+    }
+    private void cancelEdit() {
+        btnChinhSua_Profile.setVisibility(View.VISIBLE);
+        btnLuu.setVisibility(View.INVISIBLE);
+        btnHuy.setVisibility(View.INVISIBLE);
+        lblName_Profile.setEnabled(false);
+        lblNgaySinh_Profile.setEnabled(false);
+        lblGioiTinh_Profile.setEnabled(false);
+        lblQueQuan_Profile.setEnabled(false);
+        lblTrinhDo_Profile.setEnabled(false);
     }
 }

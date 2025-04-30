@@ -92,7 +92,6 @@ public class Login extends AppCompatActivity {
                 .apply();
     }
 
-
     private void login(String username, String password) {
         String hashedPassword = hashPassword(password);
 
