@@ -41,12 +41,9 @@ public class ApiClient {
             os.close();
 
             int code = conn.getResponseCode();
-            if (code != HttpURLConnection.HTTP_OK) {
-                Log.e("ApiClient", "HTTP error code: " + code);
-                return null;
-            }
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(
+                    (code >= 200 && code < 300) ? conn.getInputStream() : conn.getErrorStream()));
             StringBuilder result = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
@@ -54,7 +51,15 @@ public class ApiClient {
             }
             reader.close();
 
-            return new JSONObject(result.toString());
+            String response = result.toString().trim();
+            Log.d("ApiClient", "Raw response: " + response);
+
+            if (response.startsWith("{")) {
+                return new JSONObject(response);
+            } else {
+                Log.e("ApiClient", "Unexpected non-JSON response: " + response);
+                return null;
+            }
 
         } catch (Exception e) {
             Log.e("ApiClient", "Exception: " + e.getMessage(), e);
@@ -65,6 +70,7 @@ public class ApiClient {
             }
         }
     }
+
 
     // File upload method with error handling and proper response handling
     public static void uploadFile(String endpoint, File file, int nguoiDungId) {

@@ -22,10 +22,6 @@ import androidx.core.view.WindowInsetsCompat;
 
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.FileOutputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -38,6 +34,9 @@ public class Profile extends AppCompatActivity {
 
     private Uri selectedImageUri = null;
     private ActivityResultLauncher<Intent> imagePickerLauncher;
+
+    private UpLoadImg upLoadImg;
+    private String uploadedImageUrl = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,17 +62,17 @@ public class Profile extends AppCompatActivity {
         img_Profile = findViewById(R.id.img_Profile);
         img_Profile.setEnabled(false);
 
+        upLoadImg = new UpLoadImg(this);
+
+        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        int taiKhoanId = prefs.getInt("tai_khoan_id", -1);
+
         btnReturn.setOnClickListener(v -> {
             startActivity(new Intent(Profile.this, MainActivity2.class));
             finish();
         });
 
-        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
-        int taiKhoanId = prefs.getInt("tai_khoan_id", -1);
-
-        btnLuu.setOnClickListener(v -> {
-            updateProfile(taiKhoanId);
-        });
+        btnLuu.setOnClickListener(v -> updateProfile(taiKhoanId));
 
         btnHuy.setOnClickListener(v -> {
             cancelEdit();
@@ -88,6 +87,20 @@ public class Profile extends AppCompatActivity {
                         if (data != null && data.getData() != null) {
                             selectedImageUri = data.getData();
                             img_Profile.setImageURI(selectedImageUri);
+
+                            // Upload and get URL using UpLoadImg
+                            upLoadImg.uploadImg(selectedImageUri, new UpLoadImg.UploadListener() {
+                                @Override
+                                public void onUploaded(String imageUrl) {
+                                    uploadedImageUrl = imageUrl;
+                                    Toast.makeText(Profile.this, "Image uploaded", Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void onFailed(String error) {
+                                    Toast.makeText(Profile.this, "Upload failed: " + error, Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
                     }
                 }
@@ -133,9 +146,9 @@ public class Profile extends AppCompatActivity {
                     if (response != null && response.optBoolean("success", false)) {
                         JSONObject user = response.optJSONObject("user");
                         if (user != null) {
-                            String imgUrl = user.optString("url_anh_dai_dien", "");
-                            if (!imgUrl.isEmpty()) {
-                                ApiClient.loadImageFromUrl(imgUrl, img_Profile);
+                            String uploadedImageUrl = user.optString("url_anh_dai_dien", "");
+                            if (!uploadedImageUrl.isEmpty()) {
+                                ApiClient.loadImageFromUrl(uploadedImageUrl, img_Profile);
                             } else {
                                 img_Profile.setImageResource(R.drawable.default_profile_image);
                             }
@@ -165,20 +178,18 @@ public class Profile extends AppCompatActivity {
             try {
                 JSONObject requestData = new JSONObject();
                 requestData.put("nguoi_dung_id", taiKhoanId);
+                requestData.put("urlanhdaidien", uploadedImageUrl != null ? uploadedImageUrl : img_Profile.getTag() != null ? img_Profile.getTag().toString() : "");
                 requestData.put("hoten", lblName_Profile.getText().toString());
                 requestData.put("ngaysinh", lblNgaySinh_Profile.getText().toString());
                 requestData.put("gioitinh", lblGioiTinh_Profile.getText().toString());
                 requestData.put("quequan", lblQueQuan_Profile.getText().toString());
                 requestData.put("trinhdo", lblTrinhDo_Profile.getText().toString());
 
-                JSONObject response = ApiClient.post("update_profile.php", requestData);
-
-                if (selectedImageUri != null) {
-                    File file = createTempFileFromUri(selectedImageUri);
-                    if (file != null) {
-                        ApiClient.uploadFile("update_profile_image.php", file, taiKhoanId);
-                    }
+                if (uploadedImageUrl != null) {
+                    requestData.put("url_anh_dai_dien", uploadedImageUrl);
                 }
+
+                JSONObject response = ApiClient.post("update_profile.php", requestData);
 
                 runOnUiThread(() -> {
                     if (response != null && response.optBoolean("success", false)) {
@@ -196,25 +207,6 @@ public class Profile extends AppCompatActivity {
                 });
             }
         });
-    }
-
-    private File createTempFileFromUri(Uri uri) {
-        try {
-            InputStream inputStream = getContentResolver().openInputStream(uri);
-            File tempFile = File.createTempFile("upload_", ".jpg", getCacheDir());
-            OutputStream outputStream = new FileOutputStream(tempFile);
-            byte[] buffer = new byte[4096];
-            int length;
-            while ((length = inputStream.read(buffer)) > 0) {
-                outputStream.write(buffer, 0, length);
-            }
-            outputStream.close();
-            inputStream.close();
-            return tempFile;
-        } catch (Exception e) {
-            Log.e(TAG, "Error creating temp file", e);
-            return null;
-        }
     }
 
     private void cancelEdit() {
