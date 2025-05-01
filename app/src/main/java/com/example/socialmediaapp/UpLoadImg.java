@@ -21,13 +21,13 @@ public class UpLoadImg {
         cloudinaryConfig.uploadImage(imageUri, new CloudinaryConfig.UploadCallback() {
             @Override
             public void onUploadSuccess(String imageUrl) {
-                Toast.makeText(context, "Upload thành công!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, "Upload thành công!", Toast.LENGTH_SHORT).show();
                 listener.onUploaded(imageUrl);
             }
 
             @Override
             public void onUploadFailed(String error) {
-                Toast.makeText(context, "Upload thất bại: " + error, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, "Upload thất bại: " + error, Toast.LENGTH_SHORT).show();
                 listener.onFailed(error);
             }
         });

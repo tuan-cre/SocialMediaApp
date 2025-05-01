@@ -14,6 +14,7 @@ import androidx.core.view.WindowInsetsCompat;
 public class MainActivity2 extends AppCompatActivity {
     Button btnProfile;
     Button btnLogout;
+    Button btnHome;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,9 +30,14 @@ public class MainActivity2 extends AppCompatActivity {
 
         btnLogout = findViewById(R.id.btnLogout);
         btnProfile = findViewById(R.id.btnProfile);
+        btnHome = findViewById(R.id.btnHome);
         btnLogout.setOnClickListener(v -> logout());
         btnProfile.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity2.this, Profile.class);
+            startActivity(intent);
+        });
+        btnHome.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity2.this, Bai_Dang.class);
             startActivity(intent);
         });
     }

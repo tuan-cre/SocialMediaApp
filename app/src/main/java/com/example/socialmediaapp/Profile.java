@@ -146,9 +146,10 @@ public class Profile extends AppCompatActivity {
                     if (response != null && response.optBoolean("success", false)) {
                         JSONObject user = response.optJSONObject("user");
                         if (user != null) {
-                            String uploadedImageUrl = user.optString("url_anh_dai_dien", "");
+                            uploadedImageUrl = user.optString("url_anh_dai_dien", "");
                             if (!uploadedImageUrl.isEmpty()) {
-                                ApiClient.loadImageFromUrl(uploadedImageUrl, img_Profile);
+//                                ApiClient.loadImageFromUrl(uploadedImageUrl, img_Profile);
+                                upLoadImg.setImageToView(uploadedImageUrl, img_Profile);
                             } else {
                                 img_Profile.setImageResource(R.drawable.default_profile_image);
                             }
@@ -194,7 +195,7 @@ public class Profile extends AppCompatActivity {
                 runOnUiThread(() -> {
                     if (response != null && response.optBoolean("success", false)) {
                         Toast.makeText(Profile.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
-                        fetchProfile(taiKhoanId);
+//                        fetchProfile(taiKhoanId);
                         cancelEdit();
                     } else {
                         Toast.makeText(Profile.this, "Failed to update profile", Toast.LENGTH_SHORT).show();
