@@ -30,6 +30,10 @@
             android:exported="false"
             android:theme="@style/Theme.SocialMediaApp" />
         <activity
+            android:name=".MainActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SocialMediaApp" />
+        <activity
             android:name=".ForgetPassword"
             android:exported="false" />
         <activity
