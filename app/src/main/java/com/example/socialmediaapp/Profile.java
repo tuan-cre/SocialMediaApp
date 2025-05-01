@@ -137,9 +137,8 @@ public class Profile extends AppCompatActivity {
                             if (!imgUrl.isEmpty()) {
                                 ApiClient.loadImageFromUrl(imgUrl, img_Profile);
                             } else {
-                                img_Profile.setImageResource(R.drawable.img_profile);
+                                img_Profile.setImageResource(R.drawable.default_profile_image);
                             }
-                            img_Profile.setImageResource(R.drawable.img_profile);
                             lblName_Profile.setText(user.optString("ho_ten", ""));
                             lblNgaySinh_Profile.setText(user.optString("ngay_sinh", ""));
                             lblGioiTinh_Profile.setText(user.optString("gioi_tinh", ""));
