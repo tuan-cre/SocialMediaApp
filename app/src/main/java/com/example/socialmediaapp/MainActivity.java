@@ -1,10 +1,12 @@
 package com.example.socialmediaapp;
 
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
+import androidx.core.view.OnApplyWindowInsetsListener;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
@@ -32,6 +34,22 @@ public class MainActivity extends AppCompatActivity {
 
         viewPager = findViewById(R.id.viewPager);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
+
+        // KHÔNG padding bottom ở layout chính (chỉ padding top/left/right nếu muốn)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0); // 👈 ĐÂY là điểm quan trọng
+            return insets;
+        });
+
+// CHỈ padding bottom cho BottomNavigationView
+        ViewCompat.setOnApplyWindowInsetsListener(bottomNavigationView, (v, insets) -> {
+            int bottomInset = insets.getInsets(WindowInsetsCompat.Type.systemGestures()).bottom;
+            v.setPadding(0, 0, 0, bottomInset);
+            return insets;
+        });
+
+
 
         // Thiết lập Adapter cho ViewPager2
         FragmentStateAdapter pagerAdapter = new ScreenSlidePagerAdapter(this);
