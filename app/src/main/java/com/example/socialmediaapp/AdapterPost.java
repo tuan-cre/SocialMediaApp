@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class AdapterPost extends ArrayAdapter<PostItem> {
     UpLoadImg uploadImg = new UpLoadImg(this.getContext());
-    ArrayList<PostItem> listPostItem;
+    ArrayList<PostItem> listPostItem = null;
     public AdapterPost(Bai_Dang context, int resource, ArrayList<PostItem> objects) {
         super(context, resource, objects);
         listPostItem = objects;
