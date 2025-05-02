@@ -30,6 +30,7 @@
         android:enabled="false"
         android:inputType="text"
         android:text="Name"
+        android:textColor="@color/black"
         android:textSize="25sp" />
 
     <LinearLayout
@@ -48,7 +49,8 @@
             android:ems="10"
             android:enabled="false"
             android:inputType="text"
-            android:text="Name" />
+            android:text="Name"
+            android:textColor="@color/black" />
 
         <EditText
             android:id="@+id/edtGender"
@@ -59,7 +61,8 @@
             android:ems="10"
             android:enabled="false"
             android:inputType="text"
-            android:text="Name" />
+            android:text="Name"
+            android:textColor="@color/black" />
 
         <EditText
             android:id="@+id/edtProvince"
@@ -70,7 +73,8 @@
             android:ems="10"
             android:enabled="false"
             android:inputType="text"
-            android:text="Name" />
+            android:text="Name"
+            android:textColor="@color/black" />
 
         <EditText
             android:id="@+id/edtEducationLevel"
@@ -81,7 +85,8 @@
             android:ems="10"
             android:enabled="false"
             android:inputType="text"
-            android:text="Name" />
+            android:text="Name"
+            android:textColor="@color/black" />
 
     </LinearLayout>
 
@@ -93,7 +98,9 @@
         android:layout_marginTop="20px"
         android:layout_marginRight="100px"
         android:layout_marginBottom="20px"
-        android:text="Edit" />
+        android:backgroundTint="#B8C3E0"
+        android:text="Edit"
+        android:textColor="#000000" />
 
     <LinearLayout
         android:id="@+id/lloButtonEdit"
