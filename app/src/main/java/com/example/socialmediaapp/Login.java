@@ -36,7 +36,7 @@ public class Login extends AppCompatActivity {
 
         if (isLoggedIn()) {
             // Already logged in, skip login screen
-            startActivity(new Intent(this, MainActivity.class));
+            startActivity(new Intent(this, MainActivity2.class));
             finish();
             return;
         }
