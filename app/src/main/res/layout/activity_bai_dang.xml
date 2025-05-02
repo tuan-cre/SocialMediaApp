@@ -32,11 +32,11 @@
         android:id="@+id/btnDangBai"
         android:layout_width="123dp"
         android:layout_height="40dp"
-        android:layout_marginStart="157dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginStart="272dp"
+        android:layout_marginTop="80dp"
         android:text="Đăng bài"
-        app:layout_constraintStart_toEndOf="@+id/attachImage"
-        app:layout_constraintTop_toBottomOf="@+id/txtBaiDangText" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/attachImage"
