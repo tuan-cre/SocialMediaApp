@@ -32,11 +32,11 @@
         android:id="@+id/btnDangBai"
         android:layout_width="123dp"
         android:layout_height="40dp"
-        android:layout_marginStart="157dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginStart="272dp"
+        android:layout_marginTop="80dp"
         android:text="Đăng bài"
-        app:layout_constraintStart_toEndOf="@+id/attachImage"
-        app:layout_constraintTop_toBottomOf="@+id/txtBaiDangText" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/attachImage"
@@ -52,17 +52,18 @@
         android:id="@+id/btnTroVe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="11dp"
-        android:layout_marginTop="154dp"
+        android:layout_marginTop="152dp"
+        android:layout_marginEnd="48dp"
         android:text="Tro Ve"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/attachImage" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
         android:id="@+id/listViewPost"
-        android:layout_width="409dp"
-        android:layout_height="411dp"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="319dp" />
+        android:layout_width="396dp"
+        android:layout_height="390dp"
+        android:layout_marginTop="280dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

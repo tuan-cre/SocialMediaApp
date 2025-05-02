@@ -65,25 +65,25 @@ public class Bai_Dang extends AppCompatActivity {
             }
         });
 
-        adapterPost = new AdapterPost(Bai_Dang.this, R.layout.activity_post_list_view_item, new ArrayList<>());
+        adapterPost = new AdapterPost(Bai_Dang.this, R.layout.activity_post_list_view_item, getDSPost());
         listView.setAdapter(adapterPost);
 
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(() -> {
-            try {
-                ArrayList<PostItem> listPostItem = getDSPost();
-                runOnUiThread(() -> {
-                    adapterPost.addAll(listPostItem);
-                    adapterPost.notifyDataSetChanged();
-                });
-            } catch (Exception e) {
-                Log.e(TAG, "Error fetching posts", e);
-            }
-        });
+//        ExecutorService executor = Executors.newSingleThreadExecutor();
+//        executor.execute(() -> {
+//            try {
+//                ArrayList<PostItem> listPostItem = getDSPost();
+//                runOnUiThread(() -> {
+//                    adapterPost.addAll(listPostItem);
+//                    adapterPost.notifyDataSetChanged();
+//                });
+//            } catch (Exception e) {
+//                Log.e(TAG, "Error fetching posts", e);
+//            }
+//        });
     }
 
     private ArrayList<PostItem> getDSPost() {
-        ArrayList<PostItem> listPostItem = new ArrayList<>();
+        ArrayList<PostItem> lstPostItem = new ArrayList<PostItem>();
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
             try {
@@ -101,14 +101,14 @@ public class Bai_Dang extends AppCompatActivity {
                         int idNhom = post.isNull("nhom_id") ? -1 : post.getInt("nhom_id");
 
                         PostItem postItem = new PostItem(noidung, tenNguoiDung, avatarUrl, ngayBaiViet, id, idNhom);
-                        listPostItem.add(postItem);
+                        lstPostItem.add(postItem);
                     }
                 }
             } catch (Exception e) {
                 Log.e(TAG, "Error fetching posts", e);
             }
         });
-        return listPostItem;
+        return lstPostItem;
     }
 
     private void postBaiDang(int taiKhoanId) {
