@@ -93,9 +93,10 @@
         android:id="@+id/btnChinhSua_Profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="116dp"
+        android:layout_marginStart="160dp"
         android:layout_marginTop="52dp"
-        android:text="Chỉnh sửa thông tin"
+        android:backgroundTint="#92F6F0"
+        android:text="Edit info"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
@@ -112,8 +113,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="48dp"
-        android:layout_marginTop="17dp"
-        android:text="Lịch sử bài viết"
+        android:layout_marginTop="16dp"
+        android:text="Article history"
         android:textSize="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnChinhSua_Profile" />
@@ -124,6 +125,7 @@
         android:layout_height="42dp"
         android:layout_marginTop="17dp"
         android:layout_marginEnd="13dp"
+        android:backgroundTint="#92F6F0"
         android:text="Return"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -134,6 +136,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="88dp"
         android:layout_marginBottom="17dp"
+        android:backgroundTint="#92F6F0"
         android:text="Lưu"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/lblLichSu_Profile"
@@ -145,6 +148,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="74dp"
         android:layout_marginBottom="17dp"
+        android:backgroundTint="#92F6F0"
         android:text="Hủy"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/lblLichSu_Profile"
