@@ -27,6 +27,7 @@ import org.json.JSONObject;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+
 public class fragment_profile  extends Fragment {
     private static final String TAG = "ProfileFragment";
 
@@ -40,7 +41,6 @@ public class fragment_profile  extends Fragment {
 
     private UpLoadImg upLoadImg;
     private String uploadedImageUrl = null;
-
     private int taiKhoanId;
 
     @Nullable
@@ -53,7 +53,6 @@ public class fragment_profile  extends Fragment {
         edtGender = view.findViewById(R.id.edtGender);
         edtProvince = view.findViewById(R.id.edtProvince);
         edtEducationLevel = view.findViewById(R.id.edtEducationLevel);
-//        lblTrangThai_Profile = view.findViewById(R.id.lblTrangThai_Profile);
         btnSaveInfo = view.findViewById(R.id.btnSaveInfo);
         btnCancelEdit = view.findViewById(R.id.btnCancelEdit);
         btnEditInfo = view.findViewById(R.id.btnEditInfo);
@@ -87,7 +86,18 @@ public class fragment_profile  extends Fragment {
                         Intent data = result.getData();
                         if (data != null && data.getData() != null) {
                             selectedImageUri = data.getData();
+
+                            // Log the selected image URI
+                            Log.d(TAG, "Image URI selected: " + selectedImageUri.toString());
+
                             imgProfilePicture.setImageURI(selectedImageUri);
+
+                            // Check if the image is being picked correctly
+                            if (selectedImageUri != null) {
+                                Log.d(TAG, "Image picked successfully.");
+                            } else {
+                                Log.d(TAG, "Image picking failed.");
+                            }
 
                             upLoadImg.uploadImg(selectedImageUri, new UpLoadImg.UploadListener() {
                                 @Override
@@ -101,7 +111,11 @@ public class fragment_profile  extends Fragment {
                                     Toast.makeText(getContext(), "Upload failed: " + error, Toast.LENGTH_SHORT).show();
                                 }
                             });
+                        } else {
+                            Log.d(TAG, "No image data received.");
                         }
+                    } else {
+                        Log.d(TAG, "Image picking cancelled or failed.");
                     }
                 }
         );
