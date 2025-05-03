@@ -14,12 +14,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -29,7 +26,7 @@ public class Bai_Dang extends AppCompatActivity {
     Button btnTroVe;
     Button btnDangBai;
     EditText txtBaiDangText;
-    AdapterPost adapterPost = null;
+    AdapterPost adapterPost;
     ListView listView;
 
     @Override
@@ -37,25 +34,30 @@ public class Bai_Dang extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_bai_dang);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
+        // Ánh xạ view
         txtBaiDangText = findViewById(R.id.txtBaiDangText);
         btnTroVe = findViewById(R.id.btnTroVe);
         btnDangBai = findViewById(R.id.btnDangBai);
         listView = findViewById(R.id.listViewPost);
 
+        // Chuyển về MainActivity2 khi bấm nút
         btnTroVe.setOnClickListener(v -> {
             Intent intent = new Intent(Bai_Dang.this, MainActivity2.class);
             startActivity(intent);
         });
 
+        // Lấy id tài khoản từ SharedPreferences
         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         int taiKhoanId = prefs.getInt("tai_khoan_id", -1);
 
+        // Sự kiện đăng bài
         btnDangBai.setOnClickListener(v -> {
             String content = txtBaiDangText.getText().toString().trim();
             if (content.isEmpty()) {
@@ -65,30 +67,23 @@ public class Bai_Dang extends AppCompatActivity {
             }
         });
 
-        adapterPost = new AdapterPost(Bai_Dang.this, R.layout.activity_post_list_view_item, getDSPost());
+        // Khởi tạo adapter và gán cho ListView
+        adapterPost = new AdapterPost(Bai_Dang.this, R.layout.activity_post_list_view_item, new ArrayList<>());
         listView.setAdapter(adapterPost);
 
-//        ExecutorService executor = Executors.newSingleThreadExecutor();
-//        executor.execute(() -> {
-//            try {
-//                ArrayList<PostItem> listPostItem = getDSPost();
-//                runOnUiThread(() -> {
-//                    adapterPost.addAll(listPostItem);
-//                    adapterPost.notifyDataSetChanged();
-//                });
-//            } catch (Exception e) {
-//                Log.e(TAG, "Error fetching posts", e);
-//            }
-//        });
+        // Tải dữ liệu bài viết
+        loadPosts();
     }
 
-    private ArrayList<PostItem> getDSPost() {
-        ArrayList<PostItem> lstPostItem = new ArrayList<PostItem>();
+    // Hàm tải danh sách bài đăng từ server
+    private void loadPosts() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
+            ArrayList<PostItem> lstPostItem = new ArrayList<>();
             try {
                 JSONObject requestData = new JSONObject();
                 requestData.put("nguoi_dung_id", 1);
+
                 JSONObject response = ApiClient.post("get_Post.php", requestData);
                 if (response != null && response.optBoolean("success", false)) {
                     for (int i = 0; i < response.getJSONArray("posts").length(); i++) {
@@ -104,13 +99,22 @@ public class Bai_Dang extends AppCompatActivity {
                         lstPostItem.add(postItem);
                     }
                 }
+
+                runOnUiThread(() -> {
+                    adapterPost.clear();
+                    adapterPost.addAll(lstPostItem);
+                    adapterPost.notifyDataSetChanged();
+                });
             } catch (Exception e) {
                 Log.e(TAG, "Error fetching posts", e);
+                runOnUiThread(() ->
+                        Toast.makeText(Bai_Dang.this, "Lỗi tải bài đăng", Toast.LENGTH_SHORT).show()
+                );
             }
         });
-        return lstPostItem;
     }
 
+    // Hàm gửi bài đăng mới lên server
     private void postBaiDang(int taiKhoanId) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
@@ -124,6 +128,8 @@ public class Bai_Dang extends AppCompatActivity {
                 runOnUiThread(() -> {
                     if (response != null && response.optBoolean("success", false)) {
                         Toast.makeText(Bai_Dang.this, "Post successfully", Toast.LENGTH_SHORT).show();
+                        txtBaiDangText.setText(""); // Clear input
+                        loadPosts(); // Reload posts
                     } else {
                         Toast.makeText(Bai_Dang.this, "Failed to upload new post", Toast.LENGTH_SHORT).show();
                     }
@@ -131,10 +137,9 @@ public class Bai_Dang extends AppCompatActivity {
             } catch (Exception e) {
                 runOnUiThread(() -> {
                     Toast.makeText(Bai_Dang.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    Log.e(TAG, "Error updating profile", e);
+                    Log.e(TAG, "Error posting", e);
                 });
             }
         });
     }
 }
-
