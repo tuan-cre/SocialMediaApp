@@ -48,7 +48,7 @@ public class AdapterPost extends ArrayAdapter<PostItem> {
 
         txtNguoiDung.setText(postItem.getNguoiDung().toString());
         txtNoiDung_Post.setText(postItem.getNoiDungBaiViet().toString());
-        //uploadImg.setImageToView(postItem.getUrlAvatar().toString(), imgAvatar);
+        uploadImg.setImageToView(postItem.getUrlAvatar().toString(), imgAvatar);
         return v;
     }
 }
