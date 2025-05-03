@@ -27,7 +27,7 @@
         android:textSize="25sp" />
 
     <ListView
-        android:id="@+id/height"
+        android:id="@+id/listViewInvite"
         android:layout_width="match_parent"
         android:layout_height="180dp" />
 

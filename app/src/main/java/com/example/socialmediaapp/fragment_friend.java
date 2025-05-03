@@ -9,13 +9,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -27,6 +30,9 @@ public class fragment_friend extends Fragment {
     Button btnSendInvite;
     private int taiKhoanId;
 
+    ListView listViewInvite;
+    MultiTypeAdapter adapterInvite;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,11 +41,17 @@ public class fragment_friend extends Fragment {
 
         edtFriendID = view.findViewById(R.id.edtFriendID);
         btnSendInvite = view.findViewById(R.id.btnSendInvite);
+        listViewInvite = view.findViewById(R.id.listViewInvite);
 
         SharedPreferences prefs = requireActivity().getSharedPreferences("MyAppPrefs", Activity.MODE_PRIVATE);
         taiKhoanId = prefs.getInt("tai_khoan_id", -1);
 
+        adapterInvite = new MultiTypeAdapter(getContext(), new ArrayList<>());
+        listViewInvite.setAdapter(adapterInvite);
+
         btnSendInvite.setOnClickListener(v -> sendFriendInvite(taiKhoanId));
+
+        loadFriendInvites(); // gọi khi fragment khởi tạo
 
         return view;
     }
@@ -56,16 +68,54 @@ public class fragment_friend extends Fragment {
 
                 requireActivity().runOnUiThread(() -> {
                     if (response != null && response.optBoolean("success", false)) {
-                        Toast.makeText(requireContext(), "Invite successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), "Mời bạn bè thành công", Toast.LENGTH_SHORT).show();
+                        loadFriendInvites(); // refresh lại danh sách
                     } else {
-                        Toast.makeText(requireContext(), "Failed to invite friend", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), "Mời bạn bè thất bại", Toast.LENGTH_SHORT).show();
                     }
                 });
             } catch (Exception e) {
                 requireActivity().runOnUiThread(() -> {
-                    Toast.makeText(requireContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    Log.e(TAG, "Error sending invite", e);
+                    Toast.makeText(requireContext(), "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Lỗi khi gửi lời mời", e);
                 });
+            }
+        });
+    }
+
+    private void loadFriendInvites() {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            ArrayList<Object> lstFriendItem = new ArrayList<>();
+            try {
+                JSONObject requestData = new JSONObject();
+                requestData.put("nguoi_dung_id", taiKhoanId);
+
+                JSONObject response = ApiClient.post("get_friend.php", requestData);
+                if (response != null && response.optBoolean("success", false)) {
+                    JSONArray postsArray = response.getJSONArray("posts");
+                    for (int i = 0; i < postsArray.length(); i++) {
+                        JSONObject post = postsArray.getJSONObject(i);
+                        int nguoi_dung_id = post.getInt("nguoi_dung_id");
+                        int ban_be_id = post.getInt("ban_be_id");
+                        String trang_thai = post.getString("trang_thai");
+                        String ngay_tao = post.getString("ngay_tao");
+
+                        FriendItem friendItem = new FriendItem(nguoi_dung_id, ban_be_id, trang_thai, ngay_tao);
+                        lstFriendItem.add(friendItem);
+                    }
+                }
+
+                requireActivity().runOnUiThread(() -> {
+                    adapterInvite.clear();
+                    adapterInvite.addAll(lstFriendItem);
+                    adapterInvite.notifyDataSetChanged();
+                });
+            } catch (Exception e) {
+                Log.e(TAG, "Lỗi tải danh sách bạn bè", e);
+                requireActivity().runOnUiThread(() ->
+                        Toast.makeText(requireContext(), "Lỗi tải danh sách bạn bè", Toast.LENGTH_SHORT).show()
+                );
             }
         });
     }
