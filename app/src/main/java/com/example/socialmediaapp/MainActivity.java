@@ -42,14 +42,12 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-// CHỈ padding bottom cho BottomNavigationView
+        // CHỈ padding bottom cho BottomNavigationView
         ViewCompat.setOnApplyWindowInsetsListener(bottomNavigationView, (v, insets) -> {
             int bottomInset = insets.getInsets(WindowInsetsCompat.Type.systemGestures()).bottom;
             v.setPadding(0, 0, 0, bottomInset);
             return insets;
         });
-
-
 
         // Thiết lập Adapter cho ViewPager2
         FragmentStateAdapter pagerAdapter = new ScreenSlidePagerAdapter(this);

@@ -104,9 +104,6 @@ public class Bai_Dang extends AppCompatActivity {
                 }
 
                 runOnUiThread(() -> {
-//                    adapterPost.clear();
-//                    adapterPost.addAll(lstPostItem);
-//                    adapterPost.notifyDataSetChanged();
                     madapterPost.clear();
                     madapterPost.addAll(lstPostItem);
                     madapterPost.notifyDataSetChanged();

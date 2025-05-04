@@ -34,12 +34,12 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (isLoggedIn()) {
-            // Already logged in, skip login screen
-            startActivity(new Intent(this, MainActivity.class));
-            finish();
-            return;
-        }
+//        if (isLoggedIn()) {
+//            // Already logged in, skip login screen
+//            startActivity(new Intent(this, MainActivity.class));
+//            finish();
+//            return;
+//        }
 
         setContentView(R.layout.activity_login);
 
@@ -84,11 +84,12 @@ public class Login extends AppCompatActivity {
         return prefs.getBoolean("isLoggedIn", false);
     }
 
-    private void saveSession(int taiKhoanId) {
+    private void saveSession(int taiKhoanId, String URLAvatar) {
         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         prefs.edit()
                 .putBoolean("isLoggedIn", true)
                 .putInt("tai_khoan_id", taiKhoanId)
+                .putString("url_anh_dai_dien", URLAvatar)
                 .apply();
     }
 
@@ -102,7 +103,7 @@ public class Login extends AppCompatActivity {
                 requestData.put("ten_dang_nhap", username);
                 requestData.put("mat_khau", hashedPassword);
 
-                JSONObject response = ApiClient.post("login.php", requestData);
+                JSONObject response = ApiClient.post("login1.php", requestData);
 
                 runOnUiThread(() -> {
                     progressBar.setVisibility(ProgressBar.INVISIBLE);
@@ -151,9 +152,10 @@ public class Login extends AppCompatActivity {
             if (success) {
                 // Extract user ID
                 int taiKhoanId = response.getInt("tai_khoan_id");
+                String url_Anh_dai_dien = response.getString("url_anh_dai_dien");
 
-                // Save session (logged in state + ID)
-                saveSession(taiKhoanId);
+                // Save session (logged in state + ID + url_Anh_dai_dien)
+                saveSession(taiKhoanId, url_Anh_dai_dien);
 
                 Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
 

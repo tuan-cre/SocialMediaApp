@@ -12,12 +12,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MultiTypeAdapter extends ArrayAdapter<Object> {
     private final LayoutInflater inflater;
+    private  final UpLoadImg uploadImg = new UpLoadImg(getContext());
 
-    public MultiTypeAdapter(Context context, List<Object> objects) {
+    public MultiTypeAdapter(Context context, ArrayList<Object> objects) {
         super(context, 0, objects);
         inflater = LayoutInflater.from(context);
     }
@@ -41,7 +43,7 @@ public class MultiTypeAdapter extends ArrayAdapter<Object> {
             txtDate_Post.setText(postItem.getNgayBaiViet() != null ? sdf.format(postItem.getNgayBaiViet()) : "Chưa có ngày");
             txtNguoiDung.setText(postItem.getNguoiDung());
             txtNoiDung_Post.setText(postItem.getNoiDungBaiViet());
-            // uploadImg.setImageToView(postItem.getUrlAvatar(), imgAvatar);
+            uploadImg.setImageToView(postItem.getUrlAvatar(), imgAvatar);
 
         } else if (item instanceof FriendItem) {
             view = inflater.inflate(R.layout.friend_list_item, parent, false);
