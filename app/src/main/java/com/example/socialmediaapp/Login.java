@@ -36,7 +36,7 @@ public class Login extends AppCompatActivity {
 
         if (isLoggedIn()) {
             // Already logged in, skip login screen
-            startActivity(new Intent(this, MainActivity2.class));
+            startActivity(new Intent(this, MessageActivity.class));
             finish();
             return;
         }
@@ -158,7 +158,7 @@ public class Login extends AppCompatActivity {
                 Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
 
                 // Proceed to the main activity
-                Intent intent = new Intent(Login.this, MainActivity2.class);
+                Intent intent = new Intent(Login.this, MessageActivity.class);
                 startActivity(intent);
                 finish();
             } else {
