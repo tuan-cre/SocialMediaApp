@@ -27,6 +27,7 @@ public class Bai_Dang extends AppCompatActivity {
     Button btnDangBai;
     EditText txtBaiDangText;
     AdapterPost adapterPost;
+    MultiTypeAdapter madapterPost;
     ListView listView;
 
     @Override
@@ -68,8 +69,10 @@ public class Bai_Dang extends AppCompatActivity {
         });
 
         // Khởi tạo adapter và gán cho ListView
-        adapterPost = new AdapterPost(Bai_Dang.this, R.layout.activity_post_list_view_item, new ArrayList<>());
-        listView.setAdapter(adapterPost);
+//        adapterPost = new AdapterPost(Bai_Dang.this, R.layout.activity_post_list_view_item, new ArrayList<>());
+//        listView.setAdapter(adapterPost);
+        madapterPost = new MultiTypeAdapter(Bai_Dang.this, new ArrayList<>());
+        listView.setAdapter(madapterPost);
 
         // Tải dữ liệu bài viết
         loadPosts();
@@ -101,9 +104,12 @@ public class Bai_Dang extends AppCompatActivity {
                 }
 
                 runOnUiThread(() -> {
-                    adapterPost.clear();
-                    adapterPost.addAll(lstPostItem);
-                    adapterPost.notifyDataSetChanged();
+//                    adapterPost.clear();
+//                    adapterPost.addAll(lstPostItem);
+//                    adapterPost.notifyDataSetChanged();
+                    madapterPost.clear();
+                    madapterPost.addAll(lstPostItem);
+                    madapterPost.notifyDataSetChanged();
                 });
             } catch (Exception e) {
                 Log.e(TAG, "Error fetching posts", e);
