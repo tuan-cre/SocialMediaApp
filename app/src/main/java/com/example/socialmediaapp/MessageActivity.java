@@ -50,6 +50,7 @@ public class MessageActivity extends AppCompatActivity {
     private EditText txtMessage;
     private static final String BASE_URL = "http://localhost/";
     private Button btnSend;
+    private boolean isUserJustSentMessage = true;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +78,7 @@ public class MessageActivity extends AppCompatActivity {
         rcMessage.setAdapter(messageAdapter);
         progress.setVisibility(View.VISIBLE);
         loadMesage();
+ //       rcMessage.scrollToPosition(lstMessage.size()-1);
         progress.setVisibility(View.INVISIBLE);
 
         handler.post(pollingRunnable);
@@ -85,7 +87,6 @@ public class MessageActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 sendMessage();
-                rcMessage.scrollToPosition(lstMessage.size()-1);
             }
         });
     }
@@ -119,6 +120,11 @@ public class MessageActivity extends AppCompatActivity {
                         lstMessage.addAll(tempList);
                         messageAdapter.setData(lstMessage);
                         messageAdapter.notifyDataSetChanged();
+                        if(isUserJustSentMessage){
+                            rcMessage.scrollToPosition(lstMessage.size()-1);
+                            isUserJustSentMessage = false;
+                        }
+
                     });
                 }
 
@@ -148,6 +154,7 @@ public class MessageActivity extends AppCompatActivity {
                     if (response != null && response.optBoolean("success", false)) {
                         Toast.makeText(MessageActivity.this, "Post successfully", Toast.LENGTH_SHORT).show();
                         txtMessage.setText(""); // Clear input
+                        isUserJustSentMessage = true;
                         loadMesage();
                     } else {
                         Toast.makeText(MessageActivity.this, "Failed to upload new post", Toast.LENGTH_SHORT).show();
