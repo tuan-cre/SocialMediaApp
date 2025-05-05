@@ -1,52 +1,63 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:orientation="vertical"
     android:weightSum="10">
 
+    <!-- Title: Friend -->
     <TextView
         android:id="@+id/textView3"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:text="Friend"
         android:textAlignment="center"
         android:textSize="25sp" />
 
+    <!-- Friend List -->
     <ListView
+        android:id="@+id/listViewFriend"
         android:layout_width="match_parent"
-        android:layout_height="400dp" />
+        android:layout_height="0dp"
+        android:layout_weight="4" />
 
+    <!-- Title: Invite -->
     <TextView
         android:id="@+id/textView6"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:text="Invite"
         android:textAlignment="center"
         android:textSize="25sp" />
 
+    <!-- Invite List -->
     <ListView
         android:id="@+id/listViewInvite"
         android:layout_width="match_parent"
-        android:layout_height="180dp" />
+        android:layout_height="0dp"
+        android:layout_weight="2" />
 
+    <!-- Title: Add Friend -->
     <TextView
         android:id="@+id/textView11"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:text="Add Friend"
         android:textAlignment="center"
         android:textSize="25sp" />
 
+    <!-- Add Friend Row -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:orientation="horizontal">
 
         <TextView
             android:id="@+id/textView9"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
@@ -55,7 +66,7 @@
 
         <EditText
             android:id="@+id/edtFriendID"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:ems="10"
@@ -63,7 +74,7 @@
 
         <Button
             android:id="@+id/btnSendInvite"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="Invite" />

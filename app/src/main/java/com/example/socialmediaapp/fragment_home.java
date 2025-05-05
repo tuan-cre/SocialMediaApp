@@ -80,6 +80,7 @@ public class fragment_home extends Fragment {
             if (taiKhoanId != -1) {
                 prefs.edit().remove("tai_khoan_id")
                             .remove("url_anh_dai_dien")
+                            .remove("isLoggedIn")
                             .apply();
             }
             Intent intent = new Intent(this.requireActivity(), Login.class);
@@ -147,7 +148,7 @@ public class fragment_home extends Fragment {
             imagePickerLauncher.launch(intent);
         });
 
-        mulAdapter = new MultiTypeAdapter(this.getContext(), new ArrayList<>());
+        mulAdapter = new MultiTypeAdapter(this.getContext(), new ArrayList<>(), "Post");
         lvPost_Home.setAdapter(mulAdapter);
         loadPosts(taiKhoanId);
 

@@ -71,7 +71,7 @@ public class Bai_Dang extends AppCompatActivity {
         // Khởi tạo adapter và gán cho ListView
 //        adapterPost = new AdapterPost(Bai_Dang.this, R.layout.activity_post_list_view_item, new ArrayList<>());
 //        listView.setAdapter(adapterPost);
-        madapterPost = new MultiTypeAdapter(Bai_Dang.this, new ArrayList<>());
+        madapterPost = new MultiTypeAdapter(Bai_Dang.this, new ArrayList<>(),"Post");
         listView.setAdapter(madapterPost);
 
         // Tải dữ liệu bài viết

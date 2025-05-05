@@ -37,6 +37,21 @@ public class FriendItem {
         this.ngay_tao = ngay_tao;
     }
 
+    public String getUrlAvatar() {
+        return urlAvatar;
+    }
+
+    public void setUrlAvatar(String urlAvatar) {
+        this.urlAvatar = urlAvatar;
+    }
+    public String getTen_ban_be() {
+        return ten_ban_be;
+    }
+
+    public void setTen_ban_be(String ten_ban_be) {
+        this.ten_ban_be = ten_ban_be;
+    }
+
     public FriendItem(int nguoi_dung_id, int ban_be_id, String trang_thai, String ngaytao) {
         this.nguoi_dung_id = nguoi_dung_id;
         this.ban_be_id = ban_be_id;
@@ -53,8 +68,27 @@ public class FriendItem {
         this.ngay_tao = ngay_tao;
     }
 
+    public FriendItem(int nguoi_dung_id, int ban_be_id, String urlAvatar, String trang_thai, String ngaytao, String ten_ban_be) {
+        this.nguoi_dung_id = nguoi_dung_id;
+        this.ban_be_id = ban_be_id;
+        this.urlAvatar = urlAvatar;
+        this.trang_thai = trang_thai;
+        try {
+            // Format ngày
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            this.ngay_tao = sdf.parse(ngaytao);
+        } catch (ParseException e) {
+            this.ngay_tao = null;
+            e.printStackTrace();
+        }
+        this.ngay_tao = ngay_tao;
+        this.ten_ban_be = ten_ban_be;
+    }
+
     private int nguoi_dung_id;
     private int ban_be_id;
+    private String urlAvatar;
     private String trang_thai;
     private Date ngay_tao;
+    private String ten_ban_be;
 }

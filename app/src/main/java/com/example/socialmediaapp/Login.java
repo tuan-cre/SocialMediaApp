@@ -34,12 +34,12 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        if (isLoggedIn()) {
-//            // Already logged in, skip login screen
-//            startActivity(new Intent(this, MainActivity.class));
-//            finish();
-//            return;
-//        }
+        if (isLoggedIn()) {
+            // Already logged in, skip login screen
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+            return;
+        }
 
         setContentView(R.layout.activity_login);
 

@@ -39,8 +39,9 @@ public class MessageActivity extends AppCompatActivity {
 
     private final Handler handler = new Handler();
     private final int POLL_INTERVAL = 3000;
-    private int id_nguoi_gui=84;
-    private int id_nguoi_nhan=86;
+    private int id_nguoi_gui;
+    private int id_nguoi_nhan;
+
     private RecyclerView rcMessage;
     private static final String TAG = "MessageActivity";
     private MessageAdapter messageAdapter;
@@ -65,6 +66,8 @@ public class MessageActivity extends AppCompatActivity {
         btnSend = findViewById(R.id.btnSend);
         rcMessage = findViewById(R.id.rcv_message);
         progress = findViewById(R.id.progressMessage);
+        id_nguoi_gui = getIntent().getIntExtra("id_nguoi_gui", 0);
+        id_nguoi_nhan = getIntent().getIntExtra("id_nguoi_nhan", 0);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rcMessage.setLayoutManager(linearLayoutManager);
@@ -137,6 +140,7 @@ public class MessageActivity extends AppCompatActivity {
                 requestData.put("nguoi_dung_id", id_nguoi_gui);
                 requestData.put("nguoi_nhan_id", id_nguoi_nhan);
                 requestData.put("noi_dung", txtMessage.getText().toString());
+                Log.d(TAG, "Sending message: " + requestData.toString());
 
                 JSONObject response = ApiClient.post("send_messages.php", requestData);
 
