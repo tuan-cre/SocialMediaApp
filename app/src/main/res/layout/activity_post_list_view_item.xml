@@ -81,9 +81,11 @@
         app:layout_constraintTop_toBottomOf="@+id/txtNoiDung_PostIem" />
 
     <LinearLayout
+        android:id="@+id/lloComment"
         android:layout_width="378dp"
         android:layout_height="400dp"
         android:orientation="vertical"
+        android:visibility="gone"
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="236dp">
 
