@@ -79,4 +79,39 @@
         android:text="Button"
         app:layout_constraintStart_toEndOf="@+id/btnSendInvite"
         app:layout_constraintTop_toBottomOf="@+id/txtNoiDung_PostIem" />
+
+    <LinearLayout
+        android:layout_width="378dp"
+        android:layout_height="400dp"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="236dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/editTextTextMultiLine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:gravity="start|top"
+                android:inputType="textMultiLine" />
+
+            <Button
+                android:id="@+id/btnComment"
+                android:layout_width="8dp"
+                android:layout_height="38dp"
+                android:layout_weight="1"
+                android:text="Send" />
+        </LinearLayout>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

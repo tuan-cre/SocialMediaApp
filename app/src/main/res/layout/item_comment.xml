@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/imgCommenterPFP"
+        android:layout_width="70dp"
+        android:layout_height="66dp"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="44dp"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/txtCommenterName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Le Hoang Tuan"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <EditText
+        android:id="@+id/edtCommentContent"
+        android:layout_width="277dp"
+        android:layout_height="61dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:inputType="textMultiLine"
+        tools:layout_editor_absoluteX="99dp"
+        tools:layout_editor_absoluteY="47dp" />
+
+    <TextView
+        android:id="@+id/txtDateCreated"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ngay Tao"
+        tools:layout_editor_absoluteX="320dp"
+        tools:layout_editor_absoluteY="16dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>
