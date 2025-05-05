@@ -28,7 +28,7 @@ public class Login extends AppCompatActivity {
 
     private EditText usernameEditText, passwordEditText;
     private ProgressBar progressBar;
-    private TextView txtCreateNewAccount;
+    private TextView txtCreateNewAccount, txtForgetPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +48,7 @@ public class Login extends AppCompatActivity {
         Button btnLogin = findViewById(R.id.btnLogin);
         progressBar = findViewById(R.id.progressBar);
         txtCreateNewAccount = findViewById(R.id.txtCreateNewAccount);
+        txtForgetPassword = findViewById(R.id.txtForgetPassword);
 
         // Handle insets (system bars)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -62,6 +63,11 @@ public class Login extends AppCompatActivity {
 
         txtCreateNewAccount.setOnClickListener(v -> {
             Intent intent = new Intent(Login.this, Register.class);
+            startActivity(intent);
+        });
+
+        txtForgetPassword.setOnClickListener(v -> {
+            Intent intent = new Intent(Login.this, ForgetPassword.class);
             startActivity(intent);
         });
 

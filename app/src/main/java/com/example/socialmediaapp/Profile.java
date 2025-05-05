@@ -28,8 +28,10 @@ import java.util.concurrent.Executors;
 public class Profile extends AppCompatActivity {
     private static final String TAG = "ProfileActivity";
 
-    EditText lblName_Profile, lblNgaySinh_Profile, lblGioiTinh_Profile, lblQueQuan_Profile, lblTrinhDo_Profile, lblTrangThai_Profile;
-    Button btnReturn, btnLuu, btnHuy, btnChinhSua_Profile;
+    EditText lblName_Profile, lblNgaySinh_Profile, lblGioiTinh_Profile
+            , lblQueQuan_Profile, lblTrinhDo_Profile, lblTrangThai_Profile
+            , edtOldPassword, edtNewPassword, edtConfirmNewPassword;
+    Button btnReturn, btnLuu, btnHuy, btnChinhSua_Profile, btnConfirmChangePass, btnCancelChangePass;
     ImageView img_Profile;
 
     private Uri selectedImageUri = null;
