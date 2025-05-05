@@ -18,12 +18,19 @@
         android:maxWidth="300px"
         tools:srcCompat="@tools:sample/avatars" />
 
+    <TextView
+        android:id="@+id/FullName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10px"
+        android:text="Full Name" />
+
     <EditText
         android:id="@+id/edtName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10px"
-        android:layout_marginTop="20px"
+        android:layout_marginTop="10px"
         android:layout_marginBottom="20px"
         android:background="@null"
         android:ems="10"
@@ -40,35 +47,89 @@
         android:layout_marginBottom="20px"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/txtBirthDay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10px"
+            android:text="Birth Day" />
+
         <EditText
             android:id="@+id/edtDateOfBirth"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="50px"
+            android:layout_marginLeft="100px"
+            android:layout_marginTop="10px"
+            android:layout_marginBottom="10px"
             android:background="@null"
             android:ems="10"
             android:enabled="false"
             android:inputType="text"
             android:text="Name"
             android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/txtGender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10px"
+            android:text="Gender" />
+
+        <RadioGroup
+            android:id="@+id/rgGender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="100px"
+            android:layout_marginRight="550px"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <RadioButton
+                android:id="@+id/rdMale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Nam"
+                android:textSize="18sp" />
+
+            <RadioButton
+                android:id="@+id/rdFemale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Nữ"
+                android:textSize="18sp" />
+
+        </RadioGroup>
 
         <EditText
             android:id="@+id/edtGender"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="50px"
+            android:layout_marginLeft="100px"
+            android:layout_marginTop="10px"
+            android:layout_marginBottom="10px"
             android:background="@null"
             android:ems="10"
             android:enabled="false"
             android:inputType="text"
             android:text="Name"
             android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/txtProvince"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10px"
+            android:text="Province" />
 
         <EditText
             android:id="@+id/edtProvince"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="50px"
+            android:layout_marginLeft="100px"
+            android:layout_marginTop="10px"
+            android:layout_marginBottom="10px"
             android:background="@null"
             android:ems="10"
             android:enabled="false"
@@ -76,11 +137,20 @@
             android:text="Name"
             android:textColor="@color/black" />
 
+        <TextView
+            android:id="@+id/txtEducation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10px"
+            android:text="Education Level" />
+
         <EditText
             android:id="@+id/edtEducationLevel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="50px"
+            android:layout_marginLeft="100px"
+            android:layout_marginTop="10px"
+            android:layout_marginBottom="10px"
             android:background="@null"
             android:ems="10"
             android:enabled="false"

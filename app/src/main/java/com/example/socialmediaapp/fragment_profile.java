@@ -1,6 +1,7 @@
 package com.example.socialmediaapp;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -14,6 +15,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -24,15 +27,17 @@ import androidx.fragment.app.Fragment;
 
 import org.json.JSONObject;
 
+import java.util.Calendar;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
 public class fragment_profile  extends Fragment {
     private static final String TAG = "ProfileFragment";
-
     EditText edtName, edtDateOfBirth, edtGender, edtProvince, edtEducationLevel;
     Button btnSaveInfo, btnCancelEdit, btnEditInfo;
+    RadioGroup rgGender;
+    RadioButton rbMale, rbFemale;
     ImageView imgProfilePicture;
     LinearLayout lloButtonEdit;
 
@@ -59,6 +64,9 @@ public class fragment_profile  extends Fragment {
         imgProfilePicture = view.findViewById(R.id.imgProfilePicture);
         lloButtonEdit = view.findViewById(R.id.lloButtonEdit);
         imgProfilePicture.setEnabled(false);
+        rgGender = view.findViewById(R.id.rgGender);
+        rbMale = view.findViewById(R.id.rdMale);
+        rbFemale = view.findViewById(R.id.rdFemale);
 
         upLoadImg = new UpLoadImg(getContext());
 
@@ -128,17 +136,46 @@ public class fragment_profile  extends Fragment {
 
         btnEditInfo.setOnClickListener(v -> {
             edtName.setEnabled(true);
+
             edtDateOfBirth.setEnabled(true);
+            edtDateOfBirth.setFocusable(false);
+            edtDateOfBirth.setClickable(true);
+
+            edtDateOfBirth.setOnClickListener(dateView -> {
+                Calendar calendar = Calendar.getInstance();
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(
+                        getContext(),
+                        (datePicker, selectedYear, selectedMonth, selectedDay) -> {
+                            String formattedDate = selectedYear + "-" + String.format("%02d", selectedMonth + 1) + "-" + String.format("%02d", selectedDay);
+                            edtDateOfBirth.setText(formattedDate);
+                        },
+                        year, month, day
+                );
+                datePickerDialog.show();
+            });
+            rgGender.setVisibility(View.VISIBLE);
+            edtGender.setVisibility(View.GONE);
+            if (edtGender.getText().toString().equals("Nam")) {
+                rbMale.setChecked(true);
+            } else {
+                rbFemale.setChecked(true);
+            }
             edtGender.setEnabled(true);
             edtProvince.setEnabled(true);
             edtEducationLevel.setEnabled(true);
             imgProfilePicture.setEnabled(true);
-            btnEditInfo.setVisibility(View.INVISIBLE);
+
+            btnEditInfo.setVisibility(View.GONE);
             btnSaveInfo.setVisibility(View.VISIBLE);
             btnCancelEdit.setVisibility(View.VISIBLE);
-            btnEditInfo.setVisibility(View.GONE);
             lloButtonEdit.setVisibility(View.VISIBLE);
         });
+
+
 
         return view;
     }
@@ -189,8 +226,14 @@ public class fragment_profile  extends Fragment {
                 requestData.put("nguoi_dung_id", taiKhoanId);
                 requestData.put("urlanhdaidien", uploadedImageUrl != null ? uploadedImageUrl : imgProfilePicture.getTag() != null ? imgProfilePicture.getTag().toString() : "");
                 requestData.put("hoten", edtName.getText().toString());
+//                Log.d(TAG, "Date of birth: " + edtDateOfBirth.getText().toString());
                 requestData.put("ngaysinh", edtDateOfBirth.getText().toString());
-                requestData.put("gioitinh", edtGender.getText().toString());
+//                requestData.put("gioitinh", edtGender.getText().toString());
+                if (rbMale.isChecked()) {
+                    requestData.put("gioitinh", "Nam");
+                } else if (rbFemale.isChecked()) {
+                    requestData.put("gioitinh", "Nữ");
+                }
                 requestData.put("quequan", edtProvince.getText().toString());
                 requestData.put("trinhdo", edtEducationLevel.getText().toString());
 
@@ -220,11 +263,14 @@ public class fragment_profile  extends Fragment {
     private void cancelEdit() {
         edtName.setEnabled(false);
         edtDateOfBirth.setEnabled(false);
+        edtGender.setVisibility(View.VISIBLE);
         edtGender.setEnabled(false);
+        rgGender.setVisibility(View.GONE);
         edtProvince.setEnabled(false);
         edtEducationLevel.setEnabled(false);
         imgProfilePicture.setEnabled(false);
         lloButtonEdit.setVisibility(View.GONE);
         btnEditInfo.setVisibility(View.VISIBLE);
+        fetchProfile(taiKhoanId);
     }
 }
