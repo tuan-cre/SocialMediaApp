@@ -6,36 +6,44 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/imgCommenterPFP"
-        android:layout_width="70dp"
-        android:layout_height="66dp"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="44dp"
+        android:id="@+id/imgAvatar_CMT"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
-        android:id="@+id/txtCommenterName"
+        android:id="@+id/txtName_CMT"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="4dp"
         android:text="Le Hoang Tuan"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="16dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/edtCommentContent"
+        android:id="@+id/txtContent_CMT"
         android:layout_width="277dp"
-        android:layout_height="61dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="65dp"
+        android:layout_marginTop="25dp"
         android:ems="10"
         android:gravity="start|top"
         android:inputType="textMultiLine"
-        tools:layout_editor_absoluteX="99dp"
-        tools:layout_editor_absoluteY="47dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/txtDateCreated"
+        android:id="@+id/txtDate_CMT"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="280dp"
+        android:layout_marginTop="4dp"
         android:text="Ngay Tao"
-        tools:layout_editor_absoluteX="320dp"
-        tools:layout_editor_absoluteY="16dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
