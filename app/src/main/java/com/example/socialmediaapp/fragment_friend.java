@@ -60,21 +60,30 @@ public class fragment_friend extends Fragment implements MultiTypeAdapter.OnFrie
         // Set long click listener ONCE here
         listViewFriend.setOnItemLongClickListener((parent, view1, position, id) -> {
             FriendItem friendItem = (FriendItem) adapterFriend.getItem(position);
+
             AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-            builder.setTitle("Nhắn tin cho bạn bè");
-            builder.setMessage("Bạn muốn nhắn tin cho " + friendItem.getTen_ban_be() + "?");
-            builder.setPositiveButton("Đồng ý", (dialog, which) -> {
-                Intent intent = new Intent(requireContext(), MessageActivity.class);
-                intent.putExtra("id_nguoi_gui", taiKhoanId);
-                int id_nguoi_nhan = (friendItem.getNguoi_dung_id() == taiKhoanId)
-                        ? friendItem.getBan_be_id() : friendItem.getNguoi_dung_id();
-                intent.putExtra("id_nguoi_nhan", id_nguoi_nhan);
-                startActivity(intent);
+            builder.setTitle("Chọn hành động");
+            String[] options = {"Nhắn tin", "Xóa bạn"};
+            builder.setItems(options, (dialog, which) -> {
+                if (which == 0) {
+                    // Nhắn tin
+                    Intent intent = new Intent(requireContext(), MessageActivity.class);
+                    intent.putExtra("id_nguoi_gui", taiKhoanId);
+                    int id_nguoi_nhan = (friendItem.getNguoi_dung_id() == taiKhoanId)
+                            ? friendItem.getBan_be_id() : friendItem.getNguoi_dung_id();
+                    intent.putExtra("id_nguoi_nhan", id_nguoi_nhan);
+                    startActivity(intent);
+                } else if (which == 1) {
+                    // Xóa bạn
+                    int friendId = (friendItem.getNguoi_dung_id() == taiKhoanId)
+                            ? friendItem.getBan_be_id() : friendItem.getNguoi_dung_id();
+                    deleteFriend(taiKhoanId, friendId);
+                }
             });
-            builder.setNegativeButton("Hủy", (dialog, which) -> dialog.dismiss());
             builder.show();
             return true;
         });
+
 
         loadFriendInvites();
         return view;
@@ -102,6 +111,32 @@ public class fragment_friend extends Fragment implements MultiTypeAdapter.OnFrie
                 requireActivity().runOnUiThread(() ->
                         Toast.makeText(requireContext(), "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show());
                 Log.e(TAG, "Lỗi khi gửi lời mời", e);
+            }
+        });
+    }
+
+    private void deleteFriend(int taiKhoanId, int friendId) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            try {
+                JSONObject requestData = new JSONObject();
+                requestData.put("nguoi_dung_id", taiKhoanId);
+                requestData.put("banbeid", friendId);
+
+                JSONObject response = ApiClient.post("delete_friend.php", requestData);
+
+                requireActivity().runOnUiThread(() -> {
+                    if (response != null && response.optBoolean("success", false)) {
+                        Toast.makeText(requireContext(), "Xóa bạn bè thành công", Toast.LENGTH_SHORT).show();
+                        loadFriendInvites();
+                    } else {
+                        Toast.makeText(requireContext(), "Xóa bạn bè thất bại", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } catch (Exception e) {
+                requireActivity().runOnUiThread(() ->
+                        Toast.makeText(requireContext(), "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                Log.e(TAG, "Lỗi khi xóa bạn bè", e);
             }
         });
     }

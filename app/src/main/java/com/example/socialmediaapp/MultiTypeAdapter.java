@@ -97,6 +97,7 @@ public class MultiTypeAdapter extends ArrayAdapter<Object> {
                 boolean newState = !postItem.getIsComment();
                 postItem.setIsComment(newState);
                 llcomment.setVisibility(postItem.getIsComment() ? View.VISIBLE : View.GONE);
+                Log.d("MultiTypeAdapter", "Comment button clicked, newState: " + newState);
                 if (newState) {
                     GetDSComment(postItem.getId(), comments -> {
                         Log.d("MultiTypeAdapter", "Comments received: " + comments.size());
@@ -175,11 +176,12 @@ public class MultiTypeAdapter extends ArrayAdapter<Object> {
             uploadImg.setImageToView(friendItem.getUrlAvatar(), imgAnhBanBe);
 
             if ("Invite".equals(mode)) {
-                txtFriendId.setText(String.valueOf(friendItem.getBan_be_id()));
+                txtFriendId.setText(String.valueOf(friendItem.getTen_ban_be()));
                 txtTrangThai.setText(friendItem.getTrang_thai());
-
+                txtTrangThai.setVisibility(View.INVISIBLE);
                 btnAccept.setVisibility(View.VISIBLE);
                 btnDecline.setVisibility(View.VISIBLE);
+                Log.d("MultiTypeAdapter", "Invite mode, friendItem: " + friendItem.toString());
 
                 btnAccept.setOnClickListener(v -> {
                     if (friendActionListener != null) {
