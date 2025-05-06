@@ -29,14 +29,9 @@ import java.util.concurrent.Executors;
 public class MultiTypeAdapter extends ArrayAdapter<Object> {
     private final LayoutInflater inflater;
     private final UpLoadImg uploadImg;
-    private final String mode; // "friend_list" or "friend_invite"
-
+    private final String mode;
     private ArrayList<CommentItem> listCommentItem = null;
     private final OnFriendActionListener friendActionListener;
-
-    private AdpaterComment commentAdapter;
-
-
 
     public MultiTypeAdapter(Context context, ArrayList<Object> objects, String mode) {
         super(context, 0, objects);
@@ -55,7 +50,7 @@ public class MultiTypeAdapter extends ArrayAdapter<Object> {
     }
 
     public interface OnFriendActionListener {
-        void onFriendAction(FriendItem item, String action); // "accepted" or "denied"
+        void onFriendAction(FriendItem item, String action);
     }
 
     @NonNull
@@ -82,13 +77,13 @@ public class MultiTypeAdapter extends ArrayAdapter<Object> {
             uploadImg.setImageToView(postItem.getUrlAvatar(), imgAvatar);
             ImageView imgPost = view.findViewById(R.id.imgPost_Home);
 
-            if (postItem.getUrlPost() != "null" && postItem.getUrlPost() != "") {
+            if (!"null".equals(postItem.getUrlPost()) && !postItem.getUrlPost().isEmpty()) {
                 imgPost.setVisibility(View.VISIBLE);
                 uploadImg.setImageToView(postItem.getUrlPost(), imgPost);
-            } else
+            } else {
                 imgPost.setVisibility(View.GONE);
+            }
 
-            // Xu ly comment
             Button btnLike_Home = view.findViewById(R.id.btnLike_Home);
             Button btnComment_Home = view.findViewById(R.id.btnComment_Home);
             ListView lvComment = view.findViewById(R.id.lvComment);
@@ -101,29 +96,33 @@ public class MultiTypeAdapter extends ArrayAdapter<Object> {
             btnComment_Home.setOnClickListener(v -> {
                 boolean newState = !postItem.getIsComment();
                 postItem.setIsComment(newState);
-
+                llcomment.setVisibility(postItem.getIsComment() ? View.VISIBLE : View.GONE);
                 if (newState) {
-                    // Nếu user bật comment, load dữ liệu
                     GetDSComment(postItem.getId(), comments -> {
-                        postItem.setCommentList(comments);
-                        AdpaterComment adapter = new AdpaterComment(getContext(), R.layout.item_comment, comments);
-                        postItem.setCommentAdapter(adapter);
-                        lvComment.setAdapter(adapter);
+                        Log.d("MultiTypeAdapter", "Comments received: " + comments.size());
+                        if (comments != null && !comments.isEmpty()) {
+                            postItem.setCommentList(comments);
+                            AdapterComment adapter = new AdapterComment(getContext(), R.layout.item_comment, comments);
+                            postItem.setCommentAdapter(adapter);
+                            lvComment.setAdapter(adapter);
+                            notifyDataSetChanged();
+                        } else {
+                            Toast.makeText(getContext(), "No comments yet", Toast.LENGTH_SHORT).show();
+                        }
                     });
                 }
-                notifyDataSetChanged(); // render lại view
+                notifyDataSetChanged();
             });
 
-            // Gán lại adapter mỗi khi hiển thị lại post (khi scroll)
             if (postItem.getIsComment()) {
                 ArrayList<CommentItem> comments = postItem.getCommentList();
-                AdpaterComment adapter = postItem.getCommentAdapter();
+                AdapterComment adapter = postItem.getCommentAdapter();
                 if (comments != null && adapter != null) {
                     lvComment.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
                 }
             }
 
-            // Xu ly binh luan
             btnSendComment.setOnClickListener(v1 -> {
                 String noidung = txtComment.getText().toString();
                 ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -140,25 +139,21 @@ public class MultiTypeAdapter extends ArrayAdapter<Object> {
                             try {
                                 if (response != null && response.getBoolean("success")) {
                                     txtComment.setText("");
-                                    //postItem.setIsComment(false); // Ẩn lại phần comment
                                     Toast.makeText(getContext(), response.getString("message"), Toast.LENGTH_SHORT).show();
-                                    // Reload comment mới
                                     GetDSComment(postItem.getId(), comments -> {
                                         postItem.setCommentList(comments);
-                                        AdpaterComment newAdapter = new AdpaterComment(getContext(), R.layout.item_comment, comments);
+                                        AdapterComment newAdapter = new AdapterComment(getContext(), R.layout.item_comment, comments);
                                         postItem.setCommentAdapter(newAdapter);
                                         lvComment.setAdapter(newAdapter);
                                         newAdapter.notifyDataSetChanged();
                                     });
                                 } else {
-                                    Log.e("PostListViewItem", "Failed");
                                     Toast.makeText(getContext(), response.getString("message"), Toast.LENGTH_SHORT).show();
                                 }
                             } catch (JSONException e) {
                                 throw new RuntimeException(e);
                             }
                         });
-
                     } catch (Exception e) {
                         e.printStackTrace();
                     } finally {
@@ -167,20 +162,24 @@ public class MultiTypeAdapter extends ArrayAdapter<Object> {
                 });
             });
 
-
         } else if (item instanceof FriendItem) {
             FriendItem friendItem = (FriendItem) item;
+            view = inflater.inflate(R.layout.friend_list_item, parent, false);
+
+            TextView txtFriendId = view.findViewById(R.id.txtfriendId);
+            TextView txtTrangThai = view.findViewById(R.id.txtTrangThai);
+            Button btnAccept = view.findViewById(R.id.btnAccept);
+            Button btnDecline = view.findViewById(R.id.btnDecline);
+            ImageView imgAnhBanBe = view.findViewById(R.id.imgAnhBanBe);
+
+            uploadImg.setImageToView(friendItem.getUrlAvatar(), imgAnhBanBe);
 
             if ("Invite".equals(mode)) {
-                view = inflater.inflate(R.layout.friend_list_item, parent, false);
-
-                TextView txtFriendId = view.findViewById(R.id.txtfriendId);
-                TextView txtTrangThai = view.findViewById(R.id.txtTrangThai);
-                Button btnAccept = view.findViewById(R.id.btnAccept);
-                Button btnDecline = view.findViewById(R.id.btnDecline);
-
                 txtFriendId.setText(String.valueOf(friendItem.getBan_be_id()));
                 txtTrangThai.setText(friendItem.getTrang_thai());
+
+                btnAccept.setVisibility(View.VISIBLE);
+                btnDecline.setVisibility(View.VISIBLE);
 
                 btnAccept.setOnClickListener(v -> {
                     if (friendActionListener != null) {
@@ -194,27 +193,16 @@ public class MultiTypeAdapter extends ArrayAdapter<Object> {
                     }
                 });
 
-            } else { // "friend_list"
-                view = inflater.inflate(R.layout.friend_list_item, parent, false);
-
-                TextView txtFriendId = view.findViewById(R.id.txtfriendId);
-                TextView txtTrangThai = view.findViewById(R.id.txtTrangThai);
-                Button btnAccept = view.findViewById(R.id.btnAccept);
-                Button btnDecline = view.findViewById(R.id.btnDecline);
-                ImageView imgAnhBanBe = view.findViewById(R.id.imgAnhBanBe);
-
-                uploadImg.setImageToView(friendItem.getUrlAvatar(), imgAnhBanBe);
-
-                btnAccept.setVisibility(view.GONE);
-                btnDecline.setVisibility(view.GONE);
-
-//                txtFriendId.setText(String.valueOf(friendItem.getBan_be_id()));
-//                txtTrangThai.setText(friendItem.getTrang_thai()); // or "Bạn bè"
+            } else {
                 txtFriendId.setText(friendItem.getTen_ban_be());
                 txtTrangThai.setText("Bạn bè");
+
+                btnAccept.setVisibility(View.GONE);
+                btnDecline.setVisibility(View.GONE);
             }
+
         } else {
-            view = new View(getContext()); // fallback for unknown type
+            view = new View(getContext()); // fallback
         }
 
         return view;
@@ -225,7 +213,7 @@ public class MultiTypeAdapter extends ArrayAdapter<Object> {
     }
 
     public ArrayList<CommentItem> GetDSComment(int idBaiViet, OnCommentsLoadedListener listener) {
-        listCommentItem = new ArrayList<CommentItem>();
+        listCommentItem = new ArrayList<>();
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
             try {
@@ -234,7 +222,7 @@ public class MultiTypeAdapter extends ArrayAdapter<Object> {
 
                 JSONObject response = ApiClient.post("load_comment.php", requestData);
 
-                if (response != null && response.has("success") && response.getBoolean("success") && response.has("comments")) {
+                if (response != null && response.getBoolean("success") && response.has("comments")) {
                     for (int i = 0; i < response.getJSONArray("comments").length(); i++) {
                         JSONObject comment = response.getJSONArray("comments").getJSONObject(i);
 
@@ -247,15 +235,9 @@ public class MultiTypeAdapter extends ArrayAdapter<Object> {
                         CommentItem commentItem = new CommentItem(binh_luan_id, ho_ten, noi_dung, urlAvatar, ngay_tao);
                         listCommentItem.add(commentItem);
                     }
-                } else {
-                    Log.e("MultiTypeAdapter", "Response không hợp lệ hoặc không có comments.");
                 }
 
-                // Trả kết quả về giao diện (UI thread)
-                ((Activity) getContext()).runOnUiThread(() -> {
-                    listener.onCommentsLoaded(listCommentItem);
-                });
-
+                ((Activity) getContext()).runOnUiThread(() -> listener.onCommentsLoaded(listCommentItem));
             } catch (Exception e) {
                 Log.e("MultiTypeAdapter", "Lỗi khi load comment", e);
             } finally {

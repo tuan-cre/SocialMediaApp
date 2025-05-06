@@ -16,7 +16,7 @@ public class PostItem {
     private int idNhom;
     private Boolean isComment = false;
     private ArrayList<CommentItem> commentList;
-    private AdpaterComment commentAdapter;
+    private AdapterComment commentAdapter;
 
     public PostItem(String noiDung, String nguoiDung, String urlAvatar, String ngayBaiVietStr, String urlPost, int id, int idNhom) {
         this.noiDungBaiViet = noiDung;
@@ -85,11 +85,11 @@ public class PostItem {
         return commentList;
     }
 
-    public void setCommentAdapter(AdpaterComment adapter) {
+    public void setCommentAdapter(AdapterComment adapter) {
         this.commentAdapter = adapter;
     }
 
-    public AdpaterComment getCommentAdapter() {
+    public AdapterComment getCommentAdapter() {
         return commentAdapter;
     }
 }

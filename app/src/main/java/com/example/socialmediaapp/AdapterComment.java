@@ -14,11 +14,11 @@ import androidx.annotation.Nullable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-public class AdpaterComment extends ArrayAdapter<CommentItem> {
+public class AdapterComment extends ArrayAdapter<CommentItem> {
     UpLoadImg uploadImg = new UpLoadImg(this.getContext());
     ArrayList<CommentItem> listCommentItem = null;
 
-    public AdpaterComment(@NonNull Context context, int resource, @NonNull ArrayList<CommentItem> objects) {
+    public AdapterComment(@NonNull Context context, int resource, @NonNull ArrayList<CommentItem> objects) {
         super(context, resource, objects);
         listCommentItem = objects;
     }
