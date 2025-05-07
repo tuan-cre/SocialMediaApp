@@ -19,7 +19,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -42,7 +41,6 @@ public class fragment_home extends Fragment {
     private String uploadedImageUrl = null;
     private Uri selectedImageUri = null;
     private ActivityResultLauncher<Intent> imagePickerLauncher;
-    //private LinearLayout layoutPost;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,7 +55,6 @@ public class fragment_home extends Fragment {
         btnLogout_Home = view.findViewById(R.id.btnLogout_Home);
         txtContent_Home = view.findViewById(R.id.txtContent_Home);
         lvPost_Home = view.findViewById(R.id.lvPost_Home);
-        //layoutPost = view.findViewById(R.id.post);
 
         upLoadImg = new UpLoadImg(getContext());
 
