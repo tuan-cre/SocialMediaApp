@@ -403,7 +403,7 @@ public class fragment_profile  extends Fragment {
                         int id = post.getInt("bai_viet_id");
                         int idNhom = post.isNull("nhom_id") ? -1 : post.getInt("nhom_id");
 
-                        PostItem postItem = new PostItem(noidung, tenNguoiDung, avatarUrl, ngayBaiViet, urlPost, id, idNhom);
+                        PostItem postItem = new PostItem(noidung, tenNguoiDung, avatarUrl, ngayBaiViet, urlPost, id, idNhom, 0);
                         lstPostItem.add(postItem);
                     }
                 }

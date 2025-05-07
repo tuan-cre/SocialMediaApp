@@ -15,14 +15,18 @@ public class PostItem {
     private int id;
     private int idNhom;
     private Boolean isComment = false;
+    private Boolean isLike = false;
+
+    private int soLuongLike;
     private ArrayList<CommentItem> commentList;
     private AdapterComment commentAdapter;
 
-    public PostItem(String noiDung, String nguoiDung, String urlAvatar, String ngayBaiVietStr, String urlPost, int id, int idNhom) {
+    public PostItem(String noiDung, String nguoiDung, String urlAvatar, String ngayBaiVietStr, String urlPost, int id, int idNhom, int soLuongLike) {
         this.noiDungBaiViet = noiDung;
         this.nguoiDung = nguoiDung;
         this.urlAvatar = urlAvatar;
         this.urlPost = urlPost;
+        this.soLuongLike = soLuongLike;
 
         try {
             // Format ngày
@@ -92,4 +96,12 @@ public class PostItem {
     public AdapterComment getCommentAdapter() {
         return commentAdapter;
     }
+
+    public Boolean getIsLike() { return isLike; }
+
+    public void setIsLike(Boolean like) { isLike = like; }
+
+    public int getSoLuongLike() { return soLuongLike; }
+
+    public void setSoLuongLike(int soLuongLike) { this.soLuongLike = soLuongLike; }
 }

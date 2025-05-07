@@ -109,7 +109,7 @@ public class Login extends AppCompatActivity {
                 requestData.put("ten_dang_nhap", username);
                 requestData.put("mat_khau", hashedPassword);
 
-                JSONObject response = ApiClient.post("login1.php", requestData);
+                JSONObject response = ApiClient.post("login.php", requestData);
 
                 runOnUiThread(() -> {
                     progressBar.setVisibility(ProgressBar.INVISIBLE);

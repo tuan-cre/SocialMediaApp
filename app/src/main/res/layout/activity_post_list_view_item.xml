@@ -11,7 +11,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#F0E2E2">
+        android:background="#F6E8E8">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
-                android:background="#DBD7D7"
+                android:background="#FFFAFA"
                 android:padding="10dp"
                 android:text="Content" />
 
@@ -88,11 +88,19 @@
                     android:backgroundTint="#295AE6"
                     android:text="Like" />
 
+                <TextView
+                    android:id="@+id/txtCount"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:text="Count"
+                    android:visibility="visible" />
+
                 <Button
                     android:id="@+id/btnComment_Home"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="180dp"
+                    android:layout_marginLeft="120dp"
                     android:backgroundTint="#295AE6"
                     android:text="Comment" />
             </LinearLayout>
@@ -102,7 +110,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="500dp"
                 android:layout_marginTop="8dp"
-                android:background="#C7F2E4"
+                android:background="#FFFFFF"
                 android:orientation="vertical"
                 android:visibility="visible">
 
@@ -133,8 +141,9 @@
                 <ListView
                     android:id="@+id/lvComment"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp" />
+                    android:layout_height="420dp"
+                    android:layout_marginTop="4dp"
+                    android:dividerHeight="3dp" />
             </LinearLayout>
 
         </LinearLayout>

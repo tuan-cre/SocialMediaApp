@@ -151,6 +151,7 @@ public class fragment_home extends Fragment {
         });
 
         mulAdapter = new MultiTypeAdapter(this.getContext(), new ArrayList<>(), "Post");
+        //mulAdapter = new MultiTypeAdapter(this.getContext(), new ArrayList<>(), "Post", this);
         lvPost_Home.setAdapter(mulAdapter);
 
         loadPosts(taiKhoanId);
@@ -193,6 +194,7 @@ public class fragment_home extends Fragment {
         });
     }
 
+
     private void loadPosts(int taiKhoanId) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
@@ -213,8 +215,9 @@ public class fragment_home extends Fragment {
                         String ngayBaiViet = post.getString("ngay_tao");
                         int id = post.getInt("bai_viet_id");
                         int idNhom = post.isNull("nhom_id") ? -1 : post.getInt("nhom_id");
+                        int soLuongLike = post.getInt("so_luot_thich");
 
-                        PostItem postItem = new PostItem(noidung, tenNguoiDung, avatarUrl, ngayBaiViet, urlPost, id, idNhom);
+                        PostItem postItem = new PostItem(noidung, tenNguoiDung, avatarUrl, ngayBaiViet, urlPost, id, idNhom, soLuongLike);
                         lstPostItem.add(postItem);
                     }
                 }

@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MultiTypeAdapter extends ArrayAdapter<Object> {
     private final LayoutInflater inflater;
@@ -34,13 +35,16 @@ public class MultiTypeAdapter extends ArrayAdapter<Object> {
     private final OnFriendActionListener friendActionListener;
     private final OnAddFriendListener addFriendListener;
 
+    private  Button btnLike_Home;
+    public static boolean isCommentOpen = false;
+
     public MultiTypeAdapter(Context context, ArrayList<Object> objects, String mode) {
         super(context, 0, objects);
         this.inflater = LayoutInflater.from(context);
         this.uploadImg = new UpLoadImg(context);
         this.mode = mode;
         this.friendActionListener = null;
-        this.addFriendListener =null;
+        this.addFriendListener = null;
     }
 
     public MultiTypeAdapter(Context context, ArrayList<Object> objects, String mode, OnFriendActionListener listener) {
@@ -60,6 +64,7 @@ public class MultiTypeAdapter extends ArrayAdapter<Object> {
         this.addFriendListener = addListener;
     }
 
+
     public interface OnFriendActionListener {
         void onFriendAction(FriendItem item, String action, int friendID);
     }
@@ -67,6 +72,7 @@ public class MultiTypeAdapter extends ArrayAdapter<Object> {
     public interface OnAddFriendListener {
         void onAddFriendAction(int friendID); // "accepted" or "denied"
     }
+
 
     @NonNull
     @Override
@@ -99,28 +105,38 @@ public class MultiTypeAdapter extends ArrayAdapter<Object> {
                 imgPost.setVisibility(View.GONE);
             }
 
-            Button btnLike_Home = view.findViewById(R.id.btnLike_Home);
+            btnLike_Home = view.findViewById(R.id.btnLike_Home);
             Button btnComment_Home = view.findViewById(R.id.btnComment_Home);
             ListView lvComment = view.findViewById(R.id.lvComment);
             LinearLayout llcomment = view.findViewById(R.id.lloComment);
             TextView txtComment = view.findViewById(R.id.txtComment_Home);
             Button btnSendComment = view.findViewById(R.id.btnSendComment);
 
+            // Hiển thị số lượng người đã thích bài viết
+            TextView txtSoLike = view.findViewById(R.id.txtCount);
+            txtSoLike.setText(String.valueOf(postItem.getSoLuongLike()));
+
             llcomment.setVisibility(postItem.getIsComment() ? View.VISIBLE : View.GONE);
+
+            // Xu ly nut like
+            btnLike_Home.setOnClickListener(v -> {
+                PostItem pstItem = (PostItem) getItem(position);
+                actionLike(pstItem, nguoi_dung_id);
+            });
 
             btnComment_Home.setOnClickListener(v -> {
                 boolean newState = !postItem.getIsComment();
                 postItem.setIsComment(newState);
                 llcomment.setVisibility(postItem.getIsComment() ? View.VISIBLE : View.GONE);
-                Log.d("MultiTypeAdapter", "Comment button clicked, newState: " + newState);
+
                 if (newState) {
                     GetDSComment(postItem.getId(), comments -> {
-                        Log.d("MultiTypeAdapter", "Comments received: " + comments.size());
                         if (comments != null && !comments.isEmpty()) {
                             postItem.setCommentList(comments);
                             AdapterComment adapter = new AdapterComment(getContext(), R.layout.item_comment, comments);
                             postItem.setCommentAdapter(adapter);
                             lvComment.setAdapter(adapter);
+
                             notifyDataSetChanged();
                         } else {
                             Toast.makeText(getContext(), "No comments yet", Toast.LENGTH_SHORT).show();
@@ -243,6 +259,50 @@ public class MultiTypeAdapter extends ArrayAdapter<Object> {
         return view;
     }
 
+    private void actionLike(PostItem postItem, int nguoiDungId) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            try {
+                JSONObject requestData = new JSONObject();
+                requestData.put("bai_viet_id", postItem.getId());
+                requestData.put("nguoi_dung_id", nguoiDungId);
+                requestData.put("isLike", postItem.getIsLike());
+
+                JSONObject response = ApiClient.post("like.php", requestData);
+
+                if (response != null && response.getBoolean("success")) {
+                    ((Activity) getContext()).runOnUiThread(() -> {
+                        try {
+                            Toast.makeText(getContext(), response.getString("message"), Toast.LENGTH_SHORT).show();
+                            Boolean state = response.getBoolean("isLike");
+                            postItem.setIsLike(state);
+                            if (state) {
+                                postItem.setSoLuongLike(postItem.getSoLuongLike() + 1);
+                            } else {
+                                postItem.setSoLuongLike(postItem.getSoLuongLike() - 1);
+                            }
+                            notifyDataSetChanged();
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                } else {
+                    ((Activity) getContext()).runOnUiThread(() -> {
+                        try {
+                            Toast.makeText(getContext(), response.getString("message"), Toast.LENGTH_SHORT).show();
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                }
+            } catch (Exception e) {
+                Log.e("MultiTypeAdapter", "Lỗi khi like bài viết", e);
+            } finally {
+                executor.shutdown();
+            }
+        });
+    }
+
     public interface OnCommentsLoadedListener {
         void onCommentsLoaded(ArrayList<CommentItem> comments);
     }
@@ -282,4 +342,41 @@ public class MultiTypeAdapter extends ArrayAdapter<Object> {
 
         return listCommentItem;
     }
+
+//    public void loadBTNLike(int nguoi_dung_id, ArrayList<Object> allItems) {
+//        ExecutorService executor = Executors.newSingleThreadExecutor();
+//        executor.execute(() -> {
+//            try {
+//                JSONObject requestData = new JSONObject();
+//                requestData.put("nguoi_dung_id", nguoi_dung_id);
+//
+//                JSONObject response = ApiClient.post("get_liked_posts.php", requestData);
+//
+//                if (response != null && response.getBoolean("success")) {
+//                    ArrayList<Integer> likedPostIds = new ArrayList<>();
+//                    for (int i = 0; i < response.getJSONArray("liked_posts").length(); i++) {
+//                        JSONObject post = response.getJSONArray("liked_posts").getJSONObject(i);
+//                        int bai_viet_id = post.getInt("bai_viet_id");
+//                        likedPostIds.add(bai_viet_id);
+//                    }
+//
+//                    ((Activity) getContext()).runOnUiThread(() -> {
+//                        for (int i = 0; i < getCount(); i++) {
+//                            Object item = getItem(i);
+//                            if (item instanceof PostItem) {
+//                                PostItem post = (PostItem) item;
+//                                post.setIsLike(likedPostIds.contains(post.getId()));
+//                            }
+//                        }
+//                        notifyDataSetChanged();
+//                    });
+//                }
+//            } catch (Exception e) {
+//                Log.e("MultiTypeAdapter", "Lỗi khi load bài viết đã like", e);
+//            } finally {
+//                executor.shutdown();
+//            }
+//        });
+//    }
+
 }
