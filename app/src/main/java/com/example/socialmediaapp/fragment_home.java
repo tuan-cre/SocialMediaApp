@@ -42,7 +42,6 @@ public class fragment_home extends Fragment {
     private Uri selectedImageUri = null;
     private ActivityResultLauncher<Intent> imagePickerLauncher;
     //private LinearLayout layoutPost;
-    private boolean hasLoaded = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,9 +68,6 @@ public class fragment_home extends Fragment {
                 Toast.makeText(getContext(), "User not logged in", Toast.LENGTH_SHORT).show();
             }
             return view;
-        }
-        if (!hasLoaded) {
-            loadPosts(taiKhoanId);
         }
 
         // Ảnh đại diện
@@ -157,11 +153,7 @@ public class fragment_home extends Fragment {
         mulAdapter = new MultiTypeAdapter(this.getContext(), new ArrayList<>(), "Post");
         lvPost_Home.setAdapter(mulAdapter);
 
-//        if (!hasLoaded) {
-//            hasLoaded = true;
-//            loadPosts(taiKhoanId);
-//        }
-//        loadPosts(taiKhoanId);
+        loadPosts(taiKhoanId);
 
         return view;
     }
@@ -239,7 +231,6 @@ public class fragment_home extends Fragment {
                 });
             }
             finally {
-                hasLoaded = true;
                 executor.shutdown();
             }
         });

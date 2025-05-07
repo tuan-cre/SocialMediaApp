@@ -51,7 +51,6 @@ public class fragment_profile  extends Fragment {
     private UpLoadImg upLoadImg;
     private String uploadedImageUrl = null;
     private int taiKhoanId;
-    private boolean hasLoaded = false;
 
     @Nullable
     @Override
@@ -91,9 +90,7 @@ public class fragment_profile  extends Fragment {
             Toast.makeText(getContext(), "User not logged in", Toast.LENGTH_SHORT).show();
             return view;
         }
-        if (!hasLoaded) {
-            fetchProfile(taiKhoanId);
-        }
+        fetchProfile(taiKhoanId);
 
 //        if (!hasLoaded) {
 //            hasLoaded = true;
@@ -252,7 +249,6 @@ public class fragment_profile  extends Fragment {
                     Log.e(TAG, "Error fetching profile", e);
                 });
             } finally {
-                hasLoaded = true;
                 executor.shutdown();
             }
         });
