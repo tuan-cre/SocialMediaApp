@@ -32,6 +32,7 @@ public class MultiTypeAdapter extends ArrayAdapter<Object> {
     private final String mode;
     private ArrayList<CommentItem> listCommentItem = null;
     private final OnFriendActionListener friendActionListener;
+    private final OnAddFriendListener addFriendListener;
 
     public MultiTypeAdapter(Context context, ArrayList<Object> objects, String mode) {
         super(context, 0, objects);
@@ -39,6 +40,7 @@ public class MultiTypeAdapter extends ArrayAdapter<Object> {
         this.uploadImg = new UpLoadImg(context);
         this.mode = mode;
         this.friendActionListener = null;
+        this.addFriendListener =null;
     }
 
     public MultiTypeAdapter(Context context, ArrayList<Object> objects, String mode, OnFriendActionListener listener) {
@@ -47,10 +49,23 @@ public class MultiTypeAdapter extends ArrayAdapter<Object> {
         this.uploadImg = new UpLoadImg(context);
         this.mode = mode;
         this.friendActionListener = listener;
+        this.addFriendListener = null;
+    }
+    public MultiTypeAdapter(Context context, ArrayList<Object> objects, String mode, OnFriendActionListener listener, OnAddFriendListener addListener) {
+        super(context, 0, objects);
+        this.inflater = LayoutInflater.from(context);
+        this.uploadImg = new UpLoadImg(context);
+        this.mode = mode;
+        this.friendActionListener = listener;
+        this.addFriendListener = addListener;
     }
 
     public interface OnFriendActionListener {
         void onFriendAction(FriendItem item, String action);
+    }
+
+    public interface OnAddFriendListener {
+        void onAddFriendAction(int friendID); // "accepted" or "denied"
     }
 
     @NonNull
@@ -195,7 +210,23 @@ public class MultiTypeAdapter extends ArrayAdapter<Object> {
                     }
                 });
 
-            } else {
+            } else if (item instanceof User ) {
+                view = inflater.inflate(R.layout.item_user, parent, false);
+
+                User user = (User) item;
+
+                TextView txtName = view.findViewById(R.id.txtUserName);
+                ImageView imgAvatar = view.findViewById(R.id.imgUserAvatar);
+                Button btnAddFriend = view.findViewById(R.id.btnAddFriend);
+                Log.d("MutiTypeAdapter","id_nguoi_dung: "+user.getNguoi_dung_id());
+
+                txtName.setText(user.getHo_ten());
+                uploadImg.setImageToView(user.getAvatar(), imgAvatar);
+                btnAddFriend.setOnClickListener(v -> {
+                    addFriendListener.onAddFriendAction(user.getNguoi_dung_id());
+                });
+            }
+            else {
                 txtFriendId.setText(friendItem.getTen_ban_be());
                 txtTrangThai.setText("Bạn bè");
 

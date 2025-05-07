@@ -261,6 +261,10 @@ public class fragment_friend extends Fragment implements MultiTypeAdapter.OnFrie
                 return true; // không xử lý khi đang gõ
             }
         });
+        searchView.setOnCloseListener(() -> {
+            listView.setVisibility(View.GONE); // Ẩn danh sách khi đóng search
+            return false;
+        });
     }
 
     private void searchUsers(String ho_ten) {
