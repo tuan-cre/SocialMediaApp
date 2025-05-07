@@ -61,7 +61,7 @@ public class MultiTypeAdapter extends ArrayAdapter<Object> {
     }
 
     public interface OnFriendActionListener {
-        void onFriendAction(FriendItem item, String action);
+        void onFriendAction(FriendItem item, String action, int friendID);
     }
 
     public interface OnAddFriendListener {
@@ -200,13 +200,13 @@ public class MultiTypeAdapter extends ArrayAdapter<Object> {
 
                 btnAccept.setOnClickListener(v -> {
                     if (friendActionListener != null) {
-                        friendActionListener.onFriendAction(friendItem, "đồng ý");
+                        friendActionListener.onFriendAction(friendItem, "đồng ý", 0);
                     }
                 });
 
                 btnDecline.setOnClickListener(v -> {
                     if (friendActionListener != null) {
-                        friendActionListener.onFriendAction(friendItem, "từ chối");
+                        friendActionListener.onFriendAction(friendItem, "từ chối", 0);
                     }
                 });
 
@@ -231,7 +231,8 @@ public class MultiTypeAdapter extends ArrayAdapter<Object> {
             txtName.setText(user.getHo_ten());
             uploadImg.setImageToView(user.getAvatar(), imgAvatar);
             btnAddFriend.setOnClickListener(v -> {
-                addFriendListener.onAddFriendAction(user.getNguoi_dung_id());
+//                addFriendListener.onAddFriendAction(user.getNguoi_dung_id());
+                friendActionListener.onFriendAction(null , "them", user.getNguoi_dung_id());
             });
         }
 

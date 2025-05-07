@@ -44,7 +44,6 @@ public class fragment_friend extends Fragment implements MultiTypeAdapter.OnFrie
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_friend, container, false);
-
         //edtFriendID = view.findViewById(R.id.edtFriendID);
         //btnSendInvite = view.findViewById(R.id.btnSendInvite);
         searchView = view.findViewById(R.id.searchView);
@@ -216,34 +215,34 @@ public class fragment_friend extends Fragment implements MultiTypeAdapter.OnFrie
         });
     }
 
-    @Override
-    public void onFriendAction(FriendItem item, String action) {
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(() -> {
-            try {
-                JSONObject requestData = new JSONObject();
-                requestData.put("nguoi_dung_id", item.getNguoi_dung_id());
-                requestData.put("ban_be_id", item.getBan_be_id());
-                requestData.put("trang_thai", action);
-
-                Log.d(TAG, "Gửi dữ liệu cập nhật: " + requestData.toString());
-                JSONObject response = ApiClient.post("update_friend_status.php", requestData);
-
-                requireActivity().runOnUiThread(() -> {
-                    if (response != null && response.optBoolean("success", false)) {
-                        Toast.makeText(requireContext(), "Đã " + (action.equals("đồng ý") ? "chấp nhận" : "từ chối"), Toast.LENGTH_SHORT).show();
-                        loadFriendInvites();
-                    } else {
-                        Toast.makeText(requireContext(), "Cập nhật thất bại", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            } catch (Exception e) {
-                requireActivity().runOnUiThread(() ->
-                        Toast.makeText(requireContext(), "Lỗi cập nhật: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-                Log.e(TAG, "Lỗi cập nhật trạng thái bạn bè", e);
-            }
-        });
-    }
+//    @Override
+//    public void onFriendAction(FriendItem item, String action, int friendID) {
+//        ExecutorService executor = Executors.newSingleThreadExecutor();
+//        executor.execute(() -> {
+//            try {
+//                JSONObject requestData = new JSONObject();
+//                requestData.put("nguoi_dung_id", item.getNguoi_dung_id());
+//                requestData.put("ban_be_id", item.getBan_be_id());
+//                requestData.put("trang_thai", action);
+//
+//                Log.d(TAG, "Gửi dữ liệu cập nhật: " + requestData.toString());
+//                JSONObject response = ApiClient.post("update_friend_status.php", requestData);
+//
+//                requireActivity().runOnUiThread(() -> {
+//                    if (response != null && response.optBoolean("success", false)) {
+//                        Toast.makeText(requireContext(), "Đã " + (action.equals("đồng ý") ? "chấp nhận" : "từ chối"), Toast.LENGTH_SHORT).show();
+//                        loadFriendInvites();
+//                    } else {
+//                        Toast.makeText(requireContext(), "Cập nhật thất bại", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//            } catch (Exception e) {
+//                requireActivity().runOnUiThread(() ->
+//                        Toast.makeText(requireContext(), "Lỗi cập nhật: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+//                Log.e(TAG, "Lỗi cập nhật trạng thái bạn bè", e);
+//            }
+//        });
+//    }
 
     private void setupSearch() {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -272,9 +271,8 @@ public class fragment_friend extends Fragment implements MultiTypeAdapter.OnFrie
         executor.execute(() -> {
             try {
                 JSONObject requestData = new JSONObject();
-                requestData.put("ho_ten", ho_ten); // truyền từ khoá tìm kiếm
+                requestData.put("ho_ten", ho_ten);
 
-                // Gọi API POST
                 JSONObject response = ApiClient.post("search_user.php", requestData);
                 if (response != null && response.optBoolean("success", false)) {
                     ArrayList<Object> tempList = new ArrayList<>();
@@ -289,20 +287,18 @@ public class fragment_friend extends Fragment implements MultiTypeAdapter.OnFrie
                         user_finded.setAvatar(user.getString("url_anh_dai_dien"));
 
                         tempList.add(user_finded);
-
                     }
 
                     requireActivity().runOnUiThread(() -> {
-
                         results.clear();
                         results.addAll(tempList);
                         Log.d(TAG, "Số lượng kết quả: " + tempList.size());
-                        adapter = new MultiTypeAdapter(getContext(),results,"friend_list", this);
+
+                        // Use the third constructor with OnAddFriendListener
+                        adapter = new MultiTypeAdapter(getContext(), results, "User", this);
                         listView.setVisibility(View.VISIBLE);
                         listView.setAdapter(adapter);
                         adapter.notifyDataSetChanged();
-
-
                     });
                 } else {
                     requireActivity().runOnUiThread(() ->
@@ -342,5 +338,61 @@ public class fragment_friend extends Fragment implements MultiTypeAdapter.OnFrie
                 Log.e(TAG, "Lỗi khi gửi lời mời", e);
             }
         });
+    }
+
+    @Override
+    public void onFriendAction(FriendItem item, String action, int friendID) {
+        if (friendID != 0) {
+            ExecutorService executor = Executors.newSingleThreadExecutor();
+            executor.execute(() -> {
+                try {
+                    JSONObject requestData = new JSONObject();
+                    requestData.put("nguoi_dung_id", taiKhoanId);
+                    requestData.put("banbeid", friendID);
+
+                    JSONObject response = ApiClient.post("invite_friend.php", requestData);
+
+                    requireActivity().runOnUiThread(() -> {
+                        if (response != null && response.optBoolean("success", false)) {
+                            Toast.makeText(requireContext(), "Mời bạn bè thành công", Toast.LENGTH_SHORT).show();
+                            loadFriendInvites();
+                        } else {
+                            Toast.makeText(requireContext(), "Mời bạn bè thất bại", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } catch (Exception e) {
+                    requireActivity().runOnUiThread(() ->
+                            Toast.makeText(requireContext(), "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                    Log.e(TAG, "Lỗi khi gửi lời mời", e);
+                }
+            });
+        }
+        else {
+            ExecutorService executor = Executors.newSingleThreadExecutor();
+            executor.execute(() -> {
+                try {
+                    JSONObject requestData = new JSONObject();
+                    requestData.put("nguoi_dung_id", item.getNguoi_dung_id());
+                    requestData.put("ban_be_id", item.getBan_be_id());
+                    requestData.put("trang_thai", action);
+
+                    Log.d(TAG, "Gửi dữ liệu cập nhật: " + requestData.toString());
+                    JSONObject response = ApiClient.post("update_friend_status.php", requestData);
+
+                    requireActivity().runOnUiThread(() -> {
+                        if (response != null && response.optBoolean("success", false)) {
+                            Toast.makeText(requireContext(), "Đã " + (action.equals("đồng ý") ? "chấp nhận" : "từ chối"), Toast.LENGTH_SHORT).show();
+                            loadFriendInvites();
+                        } else {
+                            Toast.makeText(requireContext(), "Cập nhật thất bại", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } catch (Exception e) {
+                    requireActivity().runOnUiThread(() ->
+                            Toast.makeText(requireContext(), "Lỗi cập nhật: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                    Log.e(TAG, "Lỗi cập nhật trạng thái bạn bè", e);
+                }
+            });
+        }
     }
 }

@@ -1,7 +1,10 @@
 package com.example.socialmediaapp;
 
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,6 +35,23 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+//        // Get screen dimensions
+//        DisplayMetrics displayMetrics = new DisplayMetrics();
+//        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+//        int screenWidth = displayMetrics.widthPixels;
+//        int screenHeight = displayMetrics.heightPixels;
+//
+//        // Set max width to 90% of screen width, and max height to 80% of screen height
+//        int maxWidth = (int) (screenWidth);
+//        int maxHeight = (int) (screenHeight);
+//
+//        Window window = getWindow();
+//        WindowManager.LayoutParams params = window.getAttributes();
+//
+//        // Apply max dimensions
+//        params.width = maxWidth;
+//        params.height = maxHeight;
 
         viewPager = findViewById(R.id.viewPager);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);

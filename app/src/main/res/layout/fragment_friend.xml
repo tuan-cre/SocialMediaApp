@@ -17,9 +17,9 @@
     <SearchView
         android:id="@+id/searchView"
         android:layout_width="match_parent"
-        android:layout_height="73dp"
-        android:queryHint="Tìm người dùng..."
-        >
+        android:layout_height="wrap_content"
+        android:layout_weight="0.25"
+        android:queryHint="Tìm người dùng...">
 
     </SearchView>
 
@@ -43,7 +43,7 @@
         android:id="@+id/listViewFriend"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4" />
+        android:layout_weight="6.75" />
 
     <!-- Title: Invite -->
     <TextView
