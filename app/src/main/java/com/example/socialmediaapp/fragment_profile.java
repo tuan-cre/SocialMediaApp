@@ -51,6 +51,7 @@ public class fragment_profile  extends Fragment {
     private UpLoadImg upLoadImg;
     private String uploadedImageUrl = null;
     private int taiKhoanId;
+    private boolean hasLoaded = false;
 
     @Nullable
     @Override
@@ -86,13 +87,19 @@ public class fragment_profile  extends Fragment {
 
         SharedPreferences prefs = requireActivity().getSharedPreferences("MyAppPrefs", Activity.MODE_PRIVATE);
         taiKhoanId = prefs.getInt("tai_khoan_id", -1);
-
         if (taiKhoanId == -1) {
             Toast.makeText(getContext(), "User not logged in", Toast.LENGTH_SHORT).show();
             return view;
         }
+        if (!hasLoaded) {
+            fetchProfile(taiKhoanId);
+        }
 
-        fetchProfile(taiKhoanId);
+//        if (!hasLoaded) {
+//            hasLoaded = true;
+//            fetchProfile(taiKhoanId);
+//        }
+//        fetchProfile(taiKhoanId);
 
         btnSaveInfo.setOnClickListener(v -> updateProfile(taiKhoanId));
 
@@ -244,6 +251,9 @@ public class fragment_profile  extends Fragment {
                     Toast.makeText(getContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     Log.e(TAG, "Error fetching profile", e);
                 });
+            } finally {
+                hasLoaded = true;
+                executor.shutdown();
             }
         });
     }

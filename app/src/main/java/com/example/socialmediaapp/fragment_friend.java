@@ -38,6 +38,7 @@ public class fragment_friend extends Fragment implements MultiTypeAdapter.OnFrie
     MultiTypeAdapter adapterInvite, adapterFriend, adapter;
     private ArrayList<Object> results = new ArrayList<>();
     SearchView searchView;
+    private boolean hasLoaded = false;
 
     @Nullable
     @Override
@@ -54,6 +55,15 @@ public class fragment_friend extends Fragment implements MultiTypeAdapter.OnFrie
 
         SharedPreferences prefs = requireActivity().getSharedPreferences("MyAppPrefs", Activity.MODE_PRIVATE);
         taiKhoanId = prefs.getInt("tai_khoan_id", -1);
+        if (taiKhoanId == -1) {
+            if (getContext() != null) {
+                Toast.makeText(getContext(), "User not logged in", Toast.LENGTH_SHORT).show();
+            }
+            return view;
+        }
+        if (!hasLoaded) {
+            loadFriendInvites();
+        }
 
         adapterInvite = new MultiTypeAdapter(getContext(), new ArrayList<>(), "Invite", this);
         adapterFriend = new MultiTypeAdapter(getContext(), new ArrayList<>(), "Friend", this);
@@ -93,8 +103,11 @@ public class fragment_friend extends Fragment implements MultiTypeAdapter.OnFrie
             return true;
         });
 
-
-        loadFriendInvites();
+//        if (!hasLoaded) {
+//            hasLoaded = true;
+//            loadFriendInvites();
+//        }
+//        loadFriendInvites();
         return view;
     }
 
@@ -207,6 +220,9 @@ public class fragment_friend extends Fragment implements MultiTypeAdapter.OnFrie
                 requireActivity().runOnUiThread(() ->
                         Toast.makeText(requireContext(), "Lỗi tải danh sách bạn bè", Toast.LENGTH_SHORT).show()
                 );
+            } finally {
+                hasLoaded = true;
+                executor.shutdown();
             }
         });
     }

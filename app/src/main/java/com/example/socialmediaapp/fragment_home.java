@@ -32,7 +32,6 @@ import java.util.concurrent.Executors;
 public class fragment_home extends Fragment {
     private static final String TAG = "HomeFragment";
     private int taiKhoanId;
-
     private ImageView imgAvatar_Home, imgPicture_Home;
     private Button btnPost_Home, btnPicture_Home, btnLogout_Home;
     private EditText txtContent_Home;
@@ -43,6 +42,7 @@ public class fragment_home extends Fragment {
     private Uri selectedImageUri = null;
     private ActivityResultLauncher<Intent> imagePickerLauncher;
     //private LinearLayout layoutPost;
+    private boolean hasLoaded = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,6 +69,9 @@ public class fragment_home extends Fragment {
                 Toast.makeText(getContext(), "User not logged in", Toast.LENGTH_SHORT).show();
             }
             return view;
+        }
+        if (!hasLoaded) {
+            loadPosts(taiKhoanId);
         }
 
         // Ảnh đại diện
@@ -153,7 +156,12 @@ public class fragment_home extends Fragment {
 
         mulAdapter = new MultiTypeAdapter(this.getContext(), new ArrayList<>(), "Post");
         lvPost_Home.setAdapter(mulAdapter);
-        loadPosts(taiKhoanId);
+
+//        if (!hasLoaded) {
+//            hasLoaded = true;
+//            loadPosts(taiKhoanId);
+//        }
+//        loadPosts(taiKhoanId);
 
         return view;
     }
@@ -231,6 +239,7 @@ public class fragment_home extends Fragment {
                 });
             }
             finally {
+                hasLoaded = true;
                 executor.shutdown();
             }
         });
