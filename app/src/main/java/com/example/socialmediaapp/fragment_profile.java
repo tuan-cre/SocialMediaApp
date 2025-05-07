@@ -99,8 +99,11 @@ public class fragment_profile  extends Fragment {
         }
         adapterHistory = new MultiTypeAdapter(getContext(), new ArrayList<>(), "History");
         listViewHistory.setAdapter(adapterHistory);
+        Log.d(TAG, "taiKhoanId: " + taiKhoanId);
         loadHistory(taiKhoanId);
+        Log.d(TAG, "loadHistory completed");
         fetchProfile(taiKhoanId);
+        Log.d(TAG, "fetchProfile completed");
 
         btnOut.setOnClickListener(v -> {
             if (taiKhoanId != -1) {
@@ -152,6 +155,7 @@ public class fragment_profile  extends Fragment {
                             Log.d(TAG, "Image URI selected: " + selectedImageUri.toString());
 
                             imgProfilePicture.setImageURI(selectedImageUri);
+                            Log.d(TAG, "Image set to ImageView.");
 
                             // Check if the image is being picked correctly
                             if (selectedImageUri != null) {
@@ -286,7 +290,7 @@ public class fragment_profile  extends Fragment {
                         JSONObject user = response.optJSONObject("user");
                         if (user != null) {
                             uploadedImageUrl = user.optString("url_anh_dai_dien", "");
-                            if (!uploadedImageUrl.isEmpty()) {
+                            if (!uploadedImageUrl.equals("null")) {
                                 upLoadImg.setImageToView(uploadedImageUrl, imgProfilePicture);
                             } else {
                                 imgProfilePicture.setImageResource(R.drawable.default_profile_image);
@@ -332,6 +336,7 @@ public class fragment_profile  extends Fragment {
                 requestData.put("trinhdo", edtEducationLevel.getText().toString());
 
                 if (uploadedImageUrl != null) {
+                    Log.d(TAG, "Url anh dai dien: " + uploadedImageUrl);
                     requestData.put("url_anh_dai_dien", uploadedImageUrl);
                 }
 
