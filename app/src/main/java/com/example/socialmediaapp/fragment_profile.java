@@ -27,6 +27,9 @@ import androidx.fragment.app.Fragment;
 
 import org.json.JSONObject;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -34,12 +37,13 @@ import java.util.concurrent.Executors;
 
 public class fragment_profile  extends Fragment {
     private static final String TAG = "ProfileFragment";
-    EditText edtName, edtDateOfBirth, edtGender, edtProvince, edtEducationLevel;
-    Button btnSaveInfo, btnCancelEdit, btnEditInfo;
+    EditText edtName, edtDateOfBirth, edtGender, edtProvince, edtEducationLevel,
+    edtOldPassword, edtNewPassword, edtConfirmNewPassword;
+    Button btnSaveInfo, btnCancelEdit, btnEditInfo, btnConfirmChangePass, btnCancelChangePass, btnChangePass;
     RadioGroup rgGender;
     RadioButton rbMale, rbFemale;
     ImageView imgProfilePicture;
-    LinearLayout lloButtonEdit;
+    LinearLayout lloButtonEdit, lloButtonChangePass, lloInfo, lloPassField, lloTwoButton;
 
     private Uri selectedImageUri = null;
     private ActivityResultLauncher<Intent> imagePickerLauncher;
@@ -67,6 +71,16 @@ public class fragment_profile  extends Fragment {
         rgGender = view.findViewById(R.id.rgGender);
         rbMale = view.findViewById(R.id.rdMale);
         rbFemale = view.findViewById(R.id.rdFemale);
+        edtOldPassword = view.findViewById(R.id.edtOldPassword);
+        edtNewPassword = view.findViewById(R.id.edtNewPassword);
+        edtConfirmNewPassword = view.findViewById(R.id.edtConfirmNewPassword);
+        btnConfirmChangePass = view.findViewById(R.id.btnConfirmChangePass);
+        btnCancelChangePass = view.findViewById(R.id.btnCancelChangePass);
+        lloButtonChangePass = view.findViewById(R.id.lloButtonChangePass);
+        lloPassField = view.findViewById(R.id.lloPassField);
+        btnChangePass = view.findViewById(R.id.btnChangePass);
+        lloInfo = view.findViewById(R.id.lloInfo);
+        lloTwoButton = view.findViewById(R.id.lloTwoButton);
 
         upLoadImg = new UpLoadImg(getContext());
 
@@ -169,14 +183,30 @@ public class fragment_profile  extends Fragment {
             edtEducationLevel.setEnabled(true);
             imgProfilePicture.setEnabled(true);
 
-            btnEditInfo.setVisibility(View.GONE);
+            lloTwoButton.setVisibility(View.GONE);
             btnSaveInfo.setVisibility(View.VISIBLE);
             btnCancelEdit.setVisibility(View.VISIBLE);
             lloButtonEdit.setVisibility(View.VISIBLE);
         });
 
+        btnChangePass.setOnClickListener(v -> {
+            lloInfo.setVisibility(View.GONE);
+            lloPassField.setVisibility(View.VISIBLE);
+            lloButtonChangePass.setVisibility(View.VISIBLE);
+            lloTwoButton.setVisibility(View.GONE);
+            edtOldPassword.setEnabled(true);
+            edtNewPassword.setEnabled(true);
+            edtConfirmNewPassword.setEnabled(true);
+        });
 
+        btnCancelChangePass.setOnClickListener(v -> {
+            lloInfo.setVisibility(View.VISIBLE);
+            lloPassField.setVisibility(View.GONE);
+            lloButtonChangePass.setVisibility(View.GONE);
+            lloTwoButton.setVisibility(View.VISIBLE);
+        });
 
+        btnConfirmChangePass.setOnClickListener(v -> { changePassword(taiKhoanId);});
         return view;
     }
 
@@ -270,7 +300,69 @@ public class fragment_profile  extends Fragment {
         edtEducationLevel.setEnabled(false);
         imgProfilePicture.setEnabled(false);
         lloButtonEdit.setVisibility(View.GONE);
-        btnEditInfo.setVisibility(View.VISIBLE);
+        lloTwoButton.setVisibility(View.VISIBLE);
         fetchProfile(taiKhoanId);
+    }
+
+    private void changePassword(int taiKhoanId) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            try {
+                String oldHashedPassword = hashPassword(edtOldPassword.getText().toString());
+                String newHashedPassword = hashPassword(edtNewPassword.getText().toString());
+                String confirmNewHashedPassword = hashPassword(edtConfirmNewPassword.getText().toString());
+
+                JSONObject requestData = new JSONObject();
+                requestData.put("nguoi_dung_id", taiKhoanId);
+                requestData
+                        .put("old_password", oldHashedPassword)
+                        .put("new_password", newHashedPassword)
+                        .put("confirm_new_password", confirmNewHashedPassword);
+
+                Log.d(TAG, "Request data: " + requestData.toString());
+                JSONObject response = ApiClient.post("change_password.php", requestData);
+
+                requireActivity().runOnUiThread(() -> {
+                    if (response != null && response.optBoolean("success", false)) {
+                        Toast.makeText(getContext(), "Password changed successfully", Toast.LENGTH_SHORT).show();
+                        edtOldPassword.setText("");
+                        edtNewPassword.setText("");
+                        edtConfirmNewPassword.setText("");
+                        lloInfo.setVisibility(View.VISIBLE);
+                        lloPassField.setVisibility(View.GONE);
+                        lloButtonChangePass.setVisibility(View.GONE);
+                        btnEditInfo.setVisibility(View.VISIBLE);
+                        btnChangePass.setVisibility(View.VISIBLE);
+                    } else {
+                        String errorMsg = response.optString("message", "Failed to change password");
+                        Toast.makeText(getContext(), errorMsg, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } catch (Exception e) {
+                requireActivity().runOnUiThread(() -> {
+                    Toast.makeText(getContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Error changing password", e);
+                });
+            }
+        });
+    }
+
+    private String hashPassword(String password) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hashedBytes = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hashedBytes) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) {
+                    hexString.append('0');
+                }
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            Log.e(TAG, "Password hashing failed", e);
+            return password;  // Fallback (should never happen for SHA-256)
+        }
     }
 }

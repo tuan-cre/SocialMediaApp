@@ -22,6 +22,7 @@ import java.nio.charset.StandardCharsets;
 
 public class ApiClient {
     private static final String BASE_URL = "https://lhtpc.site/";  // Base URL
+
 //    private static final String LINE_FEED = "\r\n";
 //    private static final String CHARSET = "UTF-8";
 

@@ -165,11 +165,11 @@ public class fragment_home extends Fragment {
                 JSONObject requestData = new JSONObject();
                 requestData.put("nguoi_dung_id", taiKhoanId);
                 requestData.put("noidung", txtContent_Home.getText().toString());
-//                if (uploadedImageUrl != null)
-//                    requestData.put("hinh_anh", uploadedImageUrl);
+                if (uploadedImageUrl != null)
+                    requestData.put("url", uploadedImageUrl);
 
 
-                JSONObject response = ApiClient.post("new_post.php", requestData);
+                JSONObject response = ApiClient.post("new_post_url.php", requestData);
 
                 requireActivity().runOnUiThread(() -> {
                     if (response != null && response.optBoolean("success", false)) {
@@ -208,12 +208,13 @@ public class fragment_home extends Fragment {
                         JSONObject post = response.getJSONArray("posts").getJSONObject(i);
                         String noidung = post.getString("noi_dung");
                         String avatarUrl = post.getString("url_anh_dai_dien");
+                        String urlPost = post.getString("url");
                         String tenNguoiDung = post.getString("ho_ten");
                         String ngayBaiViet = post.getString("ngay_tao");
                         int id = post.getInt("bai_viet_id");
                         int idNhom = post.isNull("nhom_id") ? -1 : post.getInt("nhom_id");
 
-                        PostItem postItem = new PostItem(noidung, tenNguoiDung, avatarUrl, ngayBaiViet, id, idNhom);
+                        PostItem postItem = new PostItem(noidung, tenNguoiDung, avatarUrl, ngayBaiViet, urlPost, id, idNhom);
                         lstPostItem.add(postItem);
                     }
                 }
