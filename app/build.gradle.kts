@@ -42,6 +42,7 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
+    implementation(libs.swiperefreshlayout)
 
     // Testing dependencies
     testImplementation(libs.junit)

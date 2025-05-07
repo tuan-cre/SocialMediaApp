@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F0F0E8"
+    android:background="#F0E2E2"
     tools:context=".Post_ListViewItem">
 
     <ScrollView
@@ -80,13 +80,14 @@
                 android:layout_marginTop="8dp"
                 android:orientation="horizontal">
 
+                <!-- Like Button (Left) -->
                 <Button
                     android:id="@+id/btnLike_Home"
-                    android:layout_width="wrap_content"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:backgroundTint="#295AE6"
-                    android:text="Like" />
+                    android:backgroundTint="#C5E781"
+                    android:text="Like"
+                    android:textColor="@color/black" />
 
                 <TextView
                     android:id="@+id/txtCount"
@@ -96,13 +97,20 @@
                     android:text="Count"
                     android:visibility="visible" />
 
+                <!-- Flexible Space -->
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />  <!-- Expands to fill remaining space -->
+
+                <!-- Comment Button (Right) -->
                 <Button
                     android:id="@+id/btnComment_Home"
-                    android:layout_width="wrap_content"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="120dp"
-                    android:backgroundTint="#295AE6"
-                    android:text="Comment" />
+                    android:backgroundTint="#C5E781"
+                    android:text="Comment"
+                    android:textColor="@color/black" />
             </LinearLayout>
 
             <LinearLayout
@@ -135,7 +143,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:backgroundTint="#D56464"
-                        android:text="Send" />
+                        android:text="Send"
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
                 <ListView

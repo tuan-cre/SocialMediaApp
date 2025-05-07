@@ -1,6 +1,7 @@
 package com.example.socialmediaapp;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -46,10 +48,9 @@ public class fragment_profile  extends Fragment {
     RadioButton rbMale, rbFemale;
     ImageView imgProfilePicture;
     LinearLayout lloButtonEdit, lloButtonChangePass, lloInfo, lloPassField, lloTwoButton;
-
+    ImageButton btnOut;
     private Uri selectedImageUri = null;
     private ActivityResultLauncher<Intent> imagePickerLauncher;
-
     private UpLoadImg upLoadImg;
     private String uploadedImageUrl = null;
     private int taiKhoanId;
@@ -86,6 +87,7 @@ public class fragment_profile  extends Fragment {
         lloInfo = view.findViewById(R.id.lloInfo);
         lloTwoButton = view.findViewById(R.id.lloTwoButton);
         listViewHistory = view.findViewById(R.id.listViewHistory);
+        btnOut = view.findViewById(R.id.btnOut);
 
         upLoadImg = new UpLoadImg(getContext());
 
@@ -95,18 +97,41 @@ public class fragment_profile  extends Fragment {
             Toast.makeText(getContext(), "User not logged in", Toast.LENGTH_SHORT).show();
             return view;
         }
+        adapterHistory = new MultiTypeAdapter(getContext(), new ArrayList<>(), "History");
+        listViewHistory.setAdapter(adapterHistory);
+        loadHistory(taiKhoanId);
         fetchProfile(taiKhoanId);
 
-        loadHistory(taiKhoanId);
-        adapterHistory = new MultiTypeAdapter(getContext(), new ArrayList<>(), "Post");
-        listViewHistory.setAdapter(adapterHistory);
+        btnOut.setOnClickListener(v -> {
+            if (taiKhoanId != -1) {
+                prefs.edit().remove("tai_khoan_id")
+                        .remove("url_anh_dai_dien")
+                        .remove("isLoggedIn")
+                        .apply();
+            }
+            Intent intent = new Intent(this.requireActivity(), Login.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            requireActivity().finish();
+        });
 
-
-//        if (!hasLoaded) {
-//            hasLoaded = true;
-//            fetchProfile(taiKhoanId);
-//        }
-//        fetchProfile(taiKhoanId);
+//        listViewHistory.setOnItemLongClickListener((parent, view1, position, id) -> {
+//            PostItem postItem = (PostItem) adapterHistory.getItem(position);
+//            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+//            builder.setTitle("Chọn hành động");
+//            String[] options = {"Xóa bài viết", "Không làm gì"};
+//            builder.setItems(options, (dialog, which) -> {
+//                if (which == 0) {
+//                    int baiVietId = postItem.getId();
+//                    deletePost(taiKhoanId, baiVietId);
+//                } else if (which == 1) {
+//                    //close
+//                    dialog.dismiss();
+//                }
+//            });
+//            builder.show();
+//            return true;
+//        });
 
         btnSaveInfo.setOnClickListener(v -> updateProfile(taiKhoanId));
 
@@ -204,24 +229,47 @@ public class fragment_profile  extends Fragment {
         });
 
         btnChangePass.setOnClickListener(v -> {
+            // Hide info section completely
             lloInfo.setVisibility(View.GONE);
+
+            // Show password section with full weight
             lloPassField.setVisibility(View.VISIBLE);
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) lloPassField.getLayoutParams();
+            params.weight = 3; // Take all the space that info section had
+            lloPassField.setLayoutParams(params);
+
             lloButtonChangePass.setVisibility(View.VISIBLE);
             lloTwoButton.setVisibility(View.GONE);
+
             edtOldPassword.setEnabled(true);
             edtNewPassword.setEnabled(true);
             edtConfirmNewPassword.setEnabled(true);
         });
 
         btnCancelChangePass.setOnClickListener(v -> {
-            lloInfo.setVisibility(View.VISIBLE);
-            lloPassField.setVisibility(View.GONE);
-            lloButtonChangePass.setVisibility(View.GONE);
-            lloTwoButton.setVisibility(View.VISIBLE);
+            cancleChangePass();
         });
 
         btnConfirmChangePass.setOnClickListener(v -> { changePassword(taiKhoanId);});
         return view;
+    }
+
+    private  void cancleChangePass() {
+        // Show info section with full weight
+        lloInfo.setVisibility(View.VISIBLE);
+        LinearLayout.LayoutParams infoParams = (LinearLayout.LayoutParams) lloInfo.getLayoutParams();
+        infoParams.weight = 3;
+        lloInfo.setLayoutParams(infoParams);
+
+        // Hide password section completely
+        lloPassField.setVisibility(View.GONE);
+        lloButtonChangePass.setVisibility(View.GONE);
+        lloTwoButton.setVisibility(View.VISIBLE);
+
+        // Clear password fields
+        edtOldPassword.setText("");
+        edtNewPassword.setText("");
+        edtConfirmNewPassword.setText("");
     }
 
     private void fetchProfile(int taiKhoanId) {
@@ -341,14 +389,7 @@ public class fragment_profile  extends Fragment {
                 requireActivity().runOnUiThread(() -> {
                     if (response != null && response.optBoolean("success", false)) {
                         Toast.makeText(getContext(), "Password changed successfully", Toast.LENGTH_SHORT).show();
-                        edtOldPassword.setText("");
-                        edtNewPassword.setText("");
-                        edtConfirmNewPassword.setText("");
-                        lloInfo.setVisibility(View.VISIBLE);
-                        lloPassField.setVisibility(View.GONE);
-                        lloButtonChangePass.setVisibility(View.GONE);
-                        btnEditInfo.setVisibility(View.VISIBLE);
-                        btnChangePass.setVisibility(View.VISIBLE);
+                        cancleChangePass();
                     } else {
                         String errorMsg = response.optString("message", "Failed to change password");
                         Toast.makeText(getContext(), errorMsg, Toast.LENGTH_SHORT).show();
@@ -421,6 +462,32 @@ public class fragment_profile  extends Fragment {
             }
             finally {
                 executor.shutdown();
+            }
+        });
+    }
+
+    private void deletePost(int taiKhoanId, int baiVietId) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            try {
+                JSONObject requestData = new JSONObject();
+                requestData.put("nguoi_dung_id", taiKhoanId);
+                requestData.put("post_id", baiVietId);
+
+                JSONObject response = ApiClient.post("delete_post.php", requestData);
+
+                requireActivity().runOnUiThread(() -> {
+                    if (response != null && response.optBoolean("success", false)) {
+                        Toast.makeText(requireContext(), "Xóa bài viết thành công", Toast.LENGTH_SHORT).show();
+                        loadHistory(taiKhoanId);
+                    } else {
+                        Toast.makeText(requireContext(), "Xóa bài viết thất bại", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } catch (Exception e) {
+                requireActivity().runOnUiThread(() ->
+                        Toast.makeText(requireContext(), "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                Log.e(TAG, "Lỗi khi xóa bài viết", e);
             }
         });
     }

@@ -9,7 +9,6 @@ public class PostItem {
     private String noiDungBaiViet;
     private String nguoiDung;
     private String urlAvatar;
-
     private String urlPost;
     private Date ngayBaiViet;
     private int id;

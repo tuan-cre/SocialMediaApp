@@ -44,7 +44,7 @@ public class MultiTypeAdapter extends ArrayAdapter<Object> {
         this.uploadImg = new UpLoadImg(context);
         this.mode = mode;
         this.friendActionListener = null;
-        this.addFriendListener = null;
+        this.addFriendListener =null;
     }
 
     public MultiTypeAdapter(Context context, ArrayList<Object> objects, String mode, OnFriendActionListener listener) {
@@ -83,27 +83,69 @@ public class MultiTypeAdapter extends ArrayAdapter<Object> {
         int nguoi_dung_id = prefs.getInt("tai_khoan_id", -1);
 
         if (item instanceof PostItem) {
-            view = inflater.inflate(R.layout.activity_post_list_view_item, parent, false);
-            PostItem postItem = (PostItem) item;
+            if (mode.equals("History"))
+            {
+                view = inflater.inflate(R.layout.activity_post_list_view_item, parent, false);
+                PostItem postItem = (PostItem) item;
+                TextView txtDate_Post = view.findViewById(R.id.txtDate_PostItem);
+                TextView txtNguoiDung = view.findViewById(R.id.txtName_PostItem);
+                TextView txtNoiDung_Post = view.findViewById(R.id.txtNoiDung_PostIem);
+                ImageView imgAvatar = view.findViewById(R.id.imgAvatar_PostItem);
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                txtDate_Post.setText(postItem.getNgayBaiViet() != null ? sdf.format(postItem.getNgayBaiViet()) : "Chưa có ngày");
+                txtNguoiDung.setText(postItem.getNguoiDung());
+                txtNoiDung_Post.setText(postItem.getNoiDungBaiViet());
+                uploadImg.setImageToView(postItem.getUrlAvatar(), imgAvatar);
+                ImageView imgPost = view.findViewById(R.id.imgPost_Home);
+                if (!"null".equals(postItem.getUrlPost()) && !postItem.getUrlPost().isEmpty()) {
+                    imgPost.setVisibility(View.VISIBLE);
+                    uploadImg.setImageToView(postItem.getUrlPost(), imgPost);
+                } else {
+                    imgPost.setVisibility(View.GONE);
+                }
+                Button btnLike_Home = view.findViewById(R.id.btnLike_Home);
+                Button btnComment_Home = view.findViewById(R.id.btnComment_Home);
+                ListView lvComment = view.findViewById(R.id.lvComment);
+                LinearLayout llcomment = view.findViewById(R.id.lloComment);
+                TextView txtComment = view.findViewById(R.id.txtComment_Home);
+                Button btnSendComment = view.findViewById(R.id.btnSendComment);
 
-            TextView txtDate_Post = view.findViewById(R.id.txtDate_PostItem);
-            TextView txtNguoiDung = view.findViewById(R.id.txtName_PostItem);
-            TextView txtNoiDung_Post = view.findViewById(R.id.txtNoiDung_PostIem);
-            ImageView imgAvatar = view.findViewById(R.id.imgAvatar_PostItem);
+                llcomment.setClickable(false);
+                llcomment.setFocusable(false);
+                btnLike_Home.setClickable(false);
+                btnLike_Home.setFocusable(false);
+                btnComment_Home.setClickable(false);
+                btnComment_Home.setFocusable(false);
 
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-            txtDate_Post.setText(postItem.getNgayBaiViet() != null ? sdf.format(postItem.getNgayBaiViet()) : "Chưa có ngày");
-            txtNguoiDung.setText(postItem.getNguoiDung());
-            txtNoiDung_Post.setText(postItem.getNoiDungBaiViet());
-            uploadImg.setImageToView(postItem.getUrlAvatar(), imgAvatar);
-            ImageView imgPost = view.findViewById(R.id.imgPost_Home);
-
-            if (!"null".equals(postItem.getUrlPost()) && !postItem.getUrlPost().isEmpty()) {
-                imgPost.setVisibility(View.VISIBLE);
-                uploadImg.setImageToView(postItem.getUrlPost(), imgPost);
-            } else {
-                imgPost.setVisibility(View.GONE);
+                llcomment.setVisibility(View.GONE);
+                btnLike_Home.setVisibility(View.GONE);
+                btnComment_Home.setVisibility(View.GONE);
+                lvComment.setVisibility(View.GONE);
+                txtComment.setVisibility(View.GONE);
+                btnSendComment.setVisibility(View.GONE);
             }
+            else {
+                view = inflater.inflate(R.layout.activity_post_list_view_item, parent, false);
+                PostItem postItem = (PostItem) item;
+
+                TextView txtDate_Post = view.findViewById(R.id.txtDate_PostItem);
+                TextView txtNguoiDung = view.findViewById(R.id.txtName_PostItem);
+                TextView txtNoiDung_Post = view.findViewById(R.id.txtNoiDung_PostIem);
+                ImageView imgAvatar = view.findViewById(R.id.imgAvatar_PostItem);
+
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                txtDate_Post.setText(postItem.getNgayBaiViet() != null ? sdf.format(postItem.getNgayBaiViet()) : "Chưa có ngày");
+                txtNguoiDung.setText(postItem.getNguoiDung());
+                txtNoiDung_Post.setText(postItem.getNoiDungBaiViet());
+                uploadImg.setImageToView(postItem.getUrlAvatar(), imgAvatar);
+                ImageView imgPost = view.findViewById(R.id.imgPost_Home);
+
+                if (!"null".equals(postItem.getUrlPost()) && !postItem.getUrlPost().isEmpty()) {
+                    imgPost.setVisibility(View.VISIBLE);
+                    uploadImg.setImageToView(postItem.getUrlPost(), imgPost);
+                } else {
+                    imgPost.setVisibility(View.GONE);
+                }
 
             btnLike_Home = view.findViewById(R.id.btnLike_Home);
             Button btnComment_Home = view.findViewById(R.id.btnComment_Home);
@@ -146,53 +188,54 @@ public class MultiTypeAdapter extends ArrayAdapter<Object> {
                 notifyDataSetChanged();
             });
 
-            if (postItem.getIsComment()) {
-                ArrayList<CommentItem> comments = postItem.getCommentList();
-                AdapterComment adapter = postItem.getCommentAdapter();
-                if (comments != null && adapter != null) {
-                    lvComment.setAdapter(adapter);
-                    adapter.notifyDataSetChanged();
-                }
-            }
-
-            btnSendComment.setOnClickListener(v1 -> {
-                String noidung = txtComment.getText().toString();
-                ExecutorService executor = Executors.newSingleThreadExecutor();
-                executor.execute(() -> {
-                    try {
-                        JSONObject requestData = new JSONObject();
-                        requestData.put("bai_viet_id", postItem.getId());
-                        requestData.put("noi_dung", noidung);
-                        requestData.put("nguoi_dung_id", nguoi_dung_id);
-
-                        JSONObject response = ApiClient.post("comment.php", requestData);
-
-                        ((Activity) getContext()).runOnUiThread(() -> {
-                            try {
-                                if (response != null && response.getBoolean("success")) {
-                                    txtComment.setText("");
-                                    Toast.makeText(getContext(), response.getString("message"), Toast.LENGTH_SHORT).show();
-                                    GetDSComment(postItem.getId(), comments -> {
-                                        postItem.setCommentList(comments);
-                                        AdapterComment newAdapter = new AdapterComment(getContext(), R.layout.item_comment, comments);
-                                        postItem.setCommentAdapter(newAdapter);
-                                        lvComment.setAdapter(newAdapter);
-                                        newAdapter.notifyDataSetChanged();
-                                    });
-                                } else {
-                                    Toast.makeText(getContext(), response.getString("message"), Toast.LENGTH_SHORT).show();
-                                }
-                            } catch (JSONException e) {
-                                throw new RuntimeException(e);
-                            }
-                        });
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } finally {
-                        executor.shutdown();
+                if (postItem.getIsComment()) {
+                    ArrayList<CommentItem> comments = postItem.getCommentList();
+                    AdapterComment adapter = postItem.getCommentAdapter();
+                    if (comments != null && adapter != null) {
+                        lvComment.setAdapter(adapter);
+                        adapter.notifyDataSetChanged();
                     }
+                }
+
+                btnSendComment.setOnClickListener(v1 -> {
+                    String noidung = txtComment.getText().toString();
+                    ExecutorService executor = Executors.newSingleThreadExecutor();
+                    executor.execute(() -> {
+                        try {
+                            JSONObject requestData = new JSONObject();
+                            requestData.put("bai_viet_id", postItem.getId());
+                            requestData.put("noi_dung", noidung);
+                            requestData.put("nguoi_dung_id", nguoi_dung_id);
+
+                            JSONObject response = ApiClient.post("comment.php", requestData);
+
+                            ((Activity) getContext()).runOnUiThread(() -> {
+                                try {
+                                    if (response != null && response.getBoolean("success")) {
+                                        txtComment.setText("");
+                                        Toast.makeText(getContext(), response.getString("message"), Toast.LENGTH_SHORT).show();
+                                        GetDSComment(postItem.getId(), comments -> {
+                                            postItem.setCommentList(comments);
+                                            AdapterComment newAdapter = new AdapterComment(getContext(), R.layout.item_comment, comments);
+                                            postItem.setCommentAdapter(newAdapter);
+                                            lvComment.setAdapter(newAdapter);
+                                            newAdapter.notifyDataSetChanged();
+                                        });
+                                    } else {
+                                        Toast.makeText(getContext(), response.getString("message"), Toast.LENGTH_SHORT).show();
+                                    }
+                                } catch (JSONException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        } finally {
+                            executor.shutdown();
+                        }
+                    });
                 });
-            });
+            }
 
         } else if (item instanceof FriendItem) {
             FriendItem friendItem = (FriendItem) item;
@@ -342,41 +385,4 @@ public class MultiTypeAdapter extends ArrayAdapter<Object> {
 
         return listCommentItem;
     }
-
-//    public void loadBTNLike(int nguoi_dung_id, ArrayList<Object> allItems) {
-//        ExecutorService executor = Executors.newSingleThreadExecutor();
-//        executor.execute(() -> {
-//            try {
-//                JSONObject requestData = new JSONObject();
-//                requestData.put("nguoi_dung_id", nguoi_dung_id);
-//
-//                JSONObject response = ApiClient.post("get_liked_posts.php", requestData);
-//
-//                if (response != null && response.getBoolean("success")) {
-//                    ArrayList<Integer> likedPostIds = new ArrayList<>();
-//                    for (int i = 0; i < response.getJSONArray("liked_posts").length(); i++) {
-//                        JSONObject post = response.getJSONArray("liked_posts").getJSONObject(i);
-//                        int bai_viet_id = post.getInt("bai_viet_id");
-//                        likedPostIds.add(bai_viet_id);
-//                    }
-//
-//                    ((Activity) getContext()).runOnUiThread(() -> {
-//                        for (int i = 0; i < getCount(); i++) {
-//                            Object item = getItem(i);
-//                            if (item instanceof PostItem) {
-//                                PostItem post = (PostItem) item;
-//                                post.setIsLike(likedPostIds.contains(post.getId()));
-//                            }
-//                        }
-//                        notifyDataSetChanged();
-//                    });
-//                }
-//            } catch (Exception e) {
-//                Log.e("MultiTypeAdapter", "Lỗi khi load bài viết đã like", e);
-//            } finally {
-//                executor.shutdown();
-//            }
-//        });
-//    }
-
 }

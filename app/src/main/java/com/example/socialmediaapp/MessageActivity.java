@@ -63,6 +63,20 @@ public class MessageActivity extends AppCompatActivity {
             return insets;
         });
 
+        View rootView = findViewById(R.id.main);
+        ViewCompat.setOnApplyWindowInsetsListener(rootView, (v, insets) -> {
+            Insets imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime());
+            boolean isKeyboardVisible = imeInsets.bottom > 0;
+
+            if (isKeyboardVisible) {
+                v.setPadding(0, 0, 0, imeInsets.bottom); // Chỉ set padding khi bàn phím mở
+            } else {
+                v.setPadding(0, 0, 0, 90); // Reset padding nếu bàn phím đóng
+            }
+
+            return insets;
+        });
+
         txtMessage = findViewById(R.id.txtMessage);
         btnSend = findViewById(R.id.btnSend);
         rcMessage = findViewById(R.id.rcv_message);

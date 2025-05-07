@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -68,6 +69,7 @@ public class fragment_friend extends Fragment implements MultiTypeAdapter.OnFrie
         setupSearch();
         listViewInvite.setAdapter(adapterInvite);
         listViewFriend.setAdapter(adapterFriend);
+        loadFriendInvites();
 
         //btnSendInvite.setOnClickListener(v -> sendFriendInvite(taiKhoanId));
 
@@ -98,7 +100,6 @@ public class fragment_friend extends Fragment implements MultiTypeAdapter.OnFrie
             return true;
         });
 
-        loadFriendInvites();
         return view;
     }
 
@@ -250,7 +251,11 @@ public class fragment_friend extends Fragment implements MultiTypeAdapter.OnFrie
             public boolean onQueryTextSubmit(String query) {
                 if (!query.isEmpty()) {
                     searchUsers(query);
+
                     listView.setVisibility(View.VISIBLE);
+                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) listView.getLayoutParams();
+                    params.weight = 9;
+                    listView.setLayoutParams(params);
                 }
                 return true;
             }
