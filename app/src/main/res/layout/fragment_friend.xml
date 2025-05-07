@@ -2,68 +2,88 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="10">
+    android:weightSum="10"> <!-- Adjusted weightSum -->
 
-    <!-- Title: Friend -->
-    <TextView
-        android:id="@+id/textView11"
+    <!-- Add Friend Section (20%) -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:text="Add Friend"
-        android:textAlignment="center"
-        android:textSize="25sp" />
+        android:orientation="vertical">
 
-    <SearchView
-        android:id="@+id/searchView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.25"
-        android:queryHint="Tìm người dùng...">
+        <!-- Title: Add Friend -->
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:text="Add Friend"
+            android:textAlignment="center"
+            android:textSize="25sp" />
 
-    </SearchView>
+        <!-- Search View -->
+        <SearchView
+            android:id="@+id/searchView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:queryHint="Search users..." />
+    </LinearLayout>
 
+    <!-- Search Results (Hidden by default) -->
     <ListView
         android:id="@+id/listViewUsers"
         android:layout_width="match_parent"
-        android:layout_height="675dp"
+        android:layout_height="0dp"
+        android:layout_weight="0"
         android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/textView3"
+    <!-- Friends List Section (60%) -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="Friend"
-        android:textAlignment="center"
-        android:textSize="25sp" />
+        android:layout_weight="5"
+        android:orientation="vertical">
 
-    <!-- Friend List -->
-    <ListView
-        android:id="@+id/listViewFriend"
+        <!-- Title: Friends -->
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:text="Friends"
+            android:textAlignment="center"
+            android:textSize="25sp" />
+
+        <!-- Friends List -->
+        <ListView
+            android:id="@+id/listViewFriend"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4.5" />
+    </LinearLayout>
+
+    <!-- Invites Section (20%) -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="6.75" />
+        android:layout_weight="4"
+        android:orientation="vertical">
 
-    <!-- Title: Invite -->
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="Invite"
-        android:textAlignment="center"
-        android:textSize="25sp" />
+        <!-- Title: Invites -->
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:text="Invites"
+            android:textAlignment="center"
+            android:textSize="25sp" />
 
-    <!-- Invite List -->
-    <ListView
-        android:id="@+id/listViewInvite"
-        android:layout_width="match_parent"
-        android:layout_height="193dp"
-        android:layout_weight="2" />
-
-    <!-- Title: Add Friend -->
-
-    <!-- Add Friend Row -->
-
+        <!-- Invites List -->
+        <ListView
+            android:id="@+id/listViewInvite"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3.5" />
+    </LinearLayout>
 </LinearLayout>
