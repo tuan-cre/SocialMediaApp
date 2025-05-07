@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -30,6 +31,7 @@ import org.json.JSONObject;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -51,6 +53,8 @@ public class fragment_profile  extends Fragment {
     private UpLoadImg upLoadImg;
     private String uploadedImageUrl = null;
     private int taiKhoanId;
+    ListView listViewHistory;
+    MultiTypeAdapter adapterHistory;
 
     @Nullable
     @Override
@@ -81,6 +85,7 @@ public class fragment_profile  extends Fragment {
         btnChangePass = view.findViewById(R.id.btnChangePass);
         lloInfo = view.findViewById(R.id.lloInfo);
         lloTwoButton = view.findViewById(R.id.lloTwoButton);
+        listViewHistory = view.findViewById(R.id.listViewHistory);
 
         upLoadImg = new UpLoadImg(getContext());
 
@@ -91,6 +96,11 @@ public class fragment_profile  extends Fragment {
             return view;
         }
         fetchProfile(taiKhoanId);
+
+        loadHistory(taiKhoanId);
+        adapterHistory = new MultiTypeAdapter(getContext(), new ArrayList<>(), "Post");
+        listViewHistory.setAdapter(adapterHistory);
+
 
 //        if (!hasLoaded) {
 //            hasLoaded = true;
@@ -370,5 +380,48 @@ public class fragment_profile  extends Fragment {
             Log.e(TAG, "Password hashing failed", e);
             return password;  // Fallback (should never happen for SHA-256)
         }
+    }
+
+    private void loadHistory(int taiKhoanId) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            ArrayList<PostItem> lstPostItem = new ArrayList<PostItem>();
+            try {
+                JSONObject requestData = new JSONObject();
+                requestData.put("nguoi_dung_id", taiKhoanId);
+
+                JSONObject response = ApiClient.post("get_post_history.php", requestData);
+
+                if (response != null && response.optBoolean("success", false)) {
+                    for (int i = 0; i < response.getJSONArray("posts").length(); i++) {
+                        JSONObject post = response.getJSONArray("posts").getJSONObject(i);
+                        String noidung = post.getString("noi_dung");
+                        String avatarUrl = post.getString("url_anh_dai_dien");
+                        String urlPost = post.getString("url");
+                        String tenNguoiDung = post.getString("ho_ten");
+                        String ngayBaiViet = post.getString("ngay_tao");
+                        int id = post.getInt("bai_viet_id");
+                        int idNhom = post.isNull("nhom_id") ? -1 : post.getInt("nhom_id");
+
+                        PostItem postItem = new PostItem(noidung, tenNguoiDung, avatarUrl, ngayBaiViet, urlPost, id, idNhom);
+                        lstPostItem.add(postItem);
+                    }
+                }
+                requireActivity().runOnUiThread(() -> {
+                    adapterHistory.clear();
+                    adapterHistory.addAll(lstPostItem);
+                    adapterHistory.notifyDataSetChanged();
+                });
+
+            } catch (Exception e) {
+                requireActivity().runOnUiThread(() -> {
+                    Toast.makeText(this.getContext(), "Lỗi tải bài đăng", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Error fetching posts", e);
+                });
+            }
+            finally {
+                executor.shutdown();
+            }
+        });
     }
 }

@@ -297,7 +297,7 @@ public class fragment_friend extends Fragment implements MultiTypeAdapter.OnFrie
                         results.clear();
                         results.addAll(tempList);
                         Log.d(TAG, "Số lượng kết quả: " + tempList.size());
-                        adapter = new MultiTypeAdapter(getContext(),results,"friend_list",this);
+                        adapter = new MultiTypeAdapter(getContext(),results,"friend_list", this);
                         listView.setVisibility(View.VISIBLE);
                         listView.setAdapter(adapter);
                         adapter.notifyDataSetChanged();
