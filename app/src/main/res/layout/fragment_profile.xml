@@ -82,9 +82,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="100px"
-            android:layout_marginTop="0px"
             android:layout_marginRight="550px"
-            android:layout_marginBottom="0px"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -92,25 +90,17 @@
                 android:id="@+id/rdMale"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="0px"
-                android:layout_marginBottom="0px"
                 android:layout_weight="1"
-                android:maxHeight="14sp"
-                android:minHeight="14sp"
                 android:text="Nam"
-                android:textSize="14sp" />
+                android:textSize="18sp" />
 
             <RadioButton
                 android:id="@+id/rdFemale"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="0px"
-                android:layout_marginBottom="0px"
                 android:layout_weight="1"
-                android:maxHeight="14sp"
-                android:minHeight="14sp"
                 android:text="Nữ"
-                android:textSize="14sp" />
+                android:textSize="18sp" />
 
         </RadioGroup>
 
@@ -176,7 +166,6 @@
         android:id="@+id/lloPassField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20px"
         android:orientation="vertical"
         android:visibility="gone">
 
@@ -185,6 +174,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20px"
+            android:layout_marginTop="10px"
             android:layout_marginBottom="10px"
             android:text="Old Password" />
 
@@ -193,16 +183,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="100px"
+            android:layout_marginTop="10px"
             android:layout_marginRight="100px"
+            android:layout_marginBottom="10px"
             android:ems="10"
-            android:inputType="textPassword"
-            android:maxHeight="14sp" />
+            android:inputType="textPassword" />
 
         <TextView
             android:id="@+id/textView8"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20px"
+            android:layout_marginTop="10px"
             android:layout_marginBottom="10px"
             android:text="New Password" />
 
@@ -211,7 +203,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="100px"
+            android:layout_marginTop="10px"
             android:layout_marginRight="100px"
+            android:layout_marginBottom="10px"
             android:ems="10"
             android:inputType="textPassword" />
 
@@ -220,6 +214,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20px"
+            android:layout_marginTop="10px"
             android:layout_marginBottom="10px"
             android:text="Confirm New Password" />
 
@@ -228,7 +223,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="100px"
+            android:layout_marginTop="10px"
             android:layout_marginRight="100px"
+            android:layout_marginBottom="10px"
             android:ems="10"
             android:inputType="textPassword" />
     </LinearLayout>
@@ -283,7 +280,6 @@
             android:layout_marginLeft="20px"
             android:layout_marginRight="20px"
             android:layout_weight="1"
-            android:backgroundTint="#B8C3E0"
             android:text="Save" />
 
         <Button
@@ -293,7 +289,6 @@
             android:layout_marginLeft="20px"
             android:layout_marginRight="20px"
             android:layout_weight="1"
-            android:backgroundTint="#B8C3E0"
             android:text="Cancel" />
     </LinearLayout>
 
@@ -301,29 +296,26 @@
         android:id="@+id/lloButtonChangePass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40px"
+        android:layout_marginTop="20px"
         android:layout_marginBottom="20px"
         android:orientation="horizontal"
         android:visibility="gone">
 
         <Button
             android:id="@+id/btnConfirmChangePass"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20px"
             android:layout_marginRight="20px"
             android:layout_weight="1"
-            android:backgroundTint="#B8C3E0"
             android:text="Confirm" />
 
         <Button
             android:id="@+id/btnCancelChangePass"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20px"
             android:layout_marginRight="20px"
             android:layout_weight="1"
-            android:backgroundTint="#B8C3E0"
             android:text="Cancel" />
     </LinearLayout>
 
