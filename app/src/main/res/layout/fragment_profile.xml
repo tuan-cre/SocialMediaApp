@@ -348,7 +348,8 @@
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:backgroundTint="#B8C3E0"
-                android:text="Save" />
+                android:text="Save"
+                android:textColor="@color/black" />
 
             <Button
                 android:id="@+id/btnCancelEdit"
@@ -357,7 +358,8 @@
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
                 android:backgroundTint="#B8C3E0"
-                android:text="Cancel" />
+                android:text="Cancel"
+                android:textColor="@color/black" />
         </LinearLayout>
 
         <LinearLayout
@@ -374,7 +376,8 @@
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:backgroundTint="#B8C3E0"
-                android:text="Confirm" />
+                android:text="Confirm"
+                android:textColor="@color/black" />
 
             <Button
                 android:id="@+id/btnCancelChangePass"
@@ -383,7 +386,8 @@
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
                 android:backgroundTint="#B8C3E0"
-                android:text="Cancel" />
+                android:text="Cancel"
+                android:textColor="@color/black" />
         </LinearLayout>
     </LinearLayout>
 
@@ -393,7 +397,10 @@
         android:layout_height="0dp"
         android:layout_weight="4"
         android:orientation="vertical"
-        android:padding="8dp">
+        android:padding="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?android:attr/selectableItemBackground">
 
         <TextView
             android:id="@+id/textView4"
@@ -406,6 +413,8 @@
             android:id="@+id/listViewHistory"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="8dp" />
+            android:layout_marginTop="8dp"
+            android:clickable="true"
+            android:focusable="true" />
     </LinearLayout>
 </LinearLayout>

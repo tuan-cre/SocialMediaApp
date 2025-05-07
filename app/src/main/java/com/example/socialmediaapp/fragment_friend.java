@@ -69,6 +69,7 @@ public class fragment_friend extends Fragment implements MultiTypeAdapter.OnFrie
         setupSearch();
         listViewInvite.setAdapter(adapterInvite);
         listViewFriend.setAdapter(adapterFriend);
+        loadFriendInvites();
 
         //btnSendInvite.setOnClickListener(v -> sendFriendInvite(taiKhoanId));
 
@@ -99,7 +100,6 @@ public class fragment_friend extends Fragment implements MultiTypeAdapter.OnFrie
             return true;
         });
 
-        loadFriendInvites();
         return view;
     }
 

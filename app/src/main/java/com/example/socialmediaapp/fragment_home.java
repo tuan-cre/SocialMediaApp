@@ -71,6 +71,11 @@ public class fragment_home extends Fragment {
             return view;
         }
 
+        mulAdapter = new MultiTypeAdapter(this.getContext(), new ArrayList<>(), "Post");
+        lvPost_Home.setAdapter(mulAdapter);
+
+        loadPosts(taiKhoanId);
+
         // Set avatar image
         String url_anh_dai_dien = prefs.getString("url_anh_dai_dien", "");
         if(TextUtils.isEmpty(url_anh_dai_dien))
@@ -162,10 +167,6 @@ public class fragment_home extends Fragment {
         });
 
         // Initialize adapter and load posts
-        mulAdapter = new MultiTypeAdapter(this.getContext(), new ArrayList<>(), "Post");
-        lvPost_Home.setAdapter(mulAdapter);
-
-        loadPosts(taiKhoanId);
 
         return view;
     }
