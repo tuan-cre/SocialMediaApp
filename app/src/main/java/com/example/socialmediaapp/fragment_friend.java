@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -21,6 +22,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -32,8 +34,10 @@ public class fragment_friend extends Fragment implements MultiTypeAdapter.OnFrie
     Button btnSendInvite;
     private int taiKhoanId;
 
-    ListView listViewInvite, listViewFriend;
-    MultiTypeAdapter adapterInvite, adapterFriend;
+    ListView listViewInvite, listViewFriend, listView;
+    MultiTypeAdapter adapterInvite, adapterFriend, adapter;
+    private ArrayList<Object> results = new ArrayList<>();
+    SearchView searchView;
 
     @Nullable
     @Override
@@ -41,10 +45,12 @@ public class fragment_friend extends Fragment implements MultiTypeAdapter.OnFrie
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_friend, container, false);
 
-        edtFriendID = view.findViewById(R.id.edtFriendID);
-        btnSendInvite = view.findViewById(R.id.btnSendInvite);
+        //edtFriendID = view.findViewById(R.id.edtFriendID);
+        //btnSendInvite = view.findViewById(R.id.btnSendInvite);
+        searchView = view.findViewById(R.id.searchView);
         listViewInvite = view.findViewById(R.id.listViewInvite);
         listViewFriend = view.findViewById(R.id.listViewFriend);
+        listView = view.findViewById(R.id.listViewUsers);
 
         SharedPreferences prefs = requireActivity().getSharedPreferences("MyAppPrefs", Activity.MODE_PRIVATE);
         taiKhoanId = prefs.getInt("tai_khoan_id", -1);
@@ -52,10 +58,13 @@ public class fragment_friend extends Fragment implements MultiTypeAdapter.OnFrie
         adapterInvite = new MultiTypeAdapter(getContext(), new ArrayList<>(), "Invite", this);
         adapterFriend = new MultiTypeAdapter(getContext(), new ArrayList<>(), "Friend", this);
 
+
+        //listView.setAdapter(adapter);
+        setupSearch();
         listViewInvite.setAdapter(adapterInvite);
         listViewFriend.setAdapter(adapterFriend);
 
-        btnSendInvite.setOnClickListener(v -> sendFriendInvite(taiKhoanId));
+        //btnSendInvite.setOnClickListener(v -> sendFriendInvite(taiKhoanId));
 
         // Set long click listener ONCE here
         listViewFriend.setOnItemLongClickListener((parent, view1, position, id) -> {
@@ -89,7 +98,7 @@ public class fragment_friend extends Fragment implements MultiTypeAdapter.OnFrie
         return view;
     }
 
-    private void sendFriendInvite(int taiKhoanId) {
+    public void sendFriendInvite(int taiKhoanId) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
             try {
@@ -227,6 +236,101 @@ public class fragment_friend extends Fragment implements MultiTypeAdapter.OnFrie
                 requireActivity().runOnUiThread(() ->
                         Toast.makeText(requireContext(), "Lỗi cập nhật: " + e.getMessage(), Toast.LENGTH_SHORT).show());
                 Log.e(TAG, "Lỗi cập nhật trạng thái bạn bè", e);
+            }
+        });
+    }
+
+    private void setupSearch() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (!query.isEmpty()) {
+                    searchUsers(query);
+                    listView.setVisibility(View.VISIBLE);
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return true; // không xử lý khi đang gõ
+            }
+        });
+    }
+
+    private void searchUsers(String ho_ten) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            try {
+                JSONObject requestData = new JSONObject();
+                requestData.put("ho_ten", ho_ten); // truyền từ khoá tìm kiếm
+
+                // Gọi API POST
+                JSONObject response = ApiClient.post("search_user.php", requestData);
+                if (response != null && response.optBoolean("success", false)) {
+                    ArrayList<Object> tempList = new ArrayList<>();
+                    JSONArray usersArray = response.getJSONArray("user");
+
+                    for (int i = 0; i < usersArray.length(); i++) {
+                        JSONObject user = usersArray.getJSONObject(i);
+
+                        User user_finded = new User();
+                        user_finded.setNguoi_dung_id(user.getInt("nguoi_dung_id"));
+                        user_finded.setHo_ten(user.getString("ho_ten"));
+                        user_finded.setAvatar(user.getString("url_anh_dai_dien"));
+
+                        tempList.add(user_finded);
+
+                    }
+
+                    requireActivity().runOnUiThread(() -> {
+
+                        results.clear();
+                        results.addAll(tempList);
+                        Log.d(TAG, "Số lượng kết quả: " + tempList.size());
+                        adapter = new MultiTypeAdapter(getContext(),results,"friend_list",this);
+                        listView.setVisibility(View.VISIBLE);
+                        listView.setAdapter(adapter);
+                        adapter.notifyDataSetChanged();
+
+
+                    });
+                } else {
+                    requireActivity().runOnUiThread(() ->
+                            Toast.makeText(getContext(), "Không tìm thấy kết quả", Toast.LENGTH_SHORT).show()
+                    );
+                }
+            } catch (Exception e) {
+                Log.e("SearchFragment", "Lỗi tìm kiếm", e);
+                requireActivity().runOnUiThread(() ->
+                        Toast.makeText(getContext(), "Lỗi tìm kiếm", Toast.LENGTH_SHORT).show()
+                );
+            }
+        });
+    }
+    public void onAddFriendAction(int friendID) {
+        Log.d(TAG,"taikhoan id:"+taiKhoanId);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            try {
+                JSONObject requestData = new JSONObject();
+                requestData.put("nguoi_dung_id", taiKhoanId);
+                requestData.put("banbeid", friendID);
+
+                JSONObject response = ApiClient.post("invite_friend.php", requestData);
+
+                requireActivity().runOnUiThread(() -> {
+                    if (response != null && response.optBoolean("success", false)) {
+                        Toast.makeText(requireContext(), "Mời bạn bè thành công", Toast.LENGTH_SHORT).show();
+                        loadFriendInvites();
+                    } else {
+                        Toast.makeText(requireContext(), "Mời bạn bè thất bại", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } catch (Exception e) {
+                requireActivity().runOnUiThread(() ->
+                        Toast.makeText(requireContext(), "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                Log.e(TAG, "Lỗi khi gửi lời mời", e);
             }
         });
     }
