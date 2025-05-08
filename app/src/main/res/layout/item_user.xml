@@ -28,5 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
-        android:text="Kết bạn" />
+        android:backgroundTint="#70B0EB"
+        android:text="Kết bạn"
+        android:textColor="@color/black" />
 </LinearLayout>
