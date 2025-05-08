@@ -1,5 +1,6 @@
 package com.example.socialmediaapp;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -276,6 +277,7 @@ public class fragment_profile  extends Fragment {
         edtConfirmNewPassword.setText("");
     }
 
+    @SuppressLint("SetTextI18n")
     private void fetchProfile(int taiKhoanId) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
@@ -296,10 +298,34 @@ public class fragment_profile  extends Fragment {
                                 imgProfilePicture.setImageResource(R.drawable.default_profile_image);
                             }
                             edtName.setText(user.optString("ho_ten", ""));
-                            edtDateOfBirth.setText(user.optString("ngay_sinh", ""));
-                            edtGender.setText(user.optString("gioi_tinh", ""));
-                            edtProvince.setText(user.optString("que_quan", ""));
-                            edtEducationLevel.setText(user.optString("trinh_do_hoc_van", ""));
+                            if (user.optString("ngay_sinh", "").equals("null")){
+                                edtDateOfBirth.setText("2000-1-1");
+                            }
+                            else {
+                                edtDateOfBirth.setText(user.optString("ngay_sinh", ""));
+                            }
+                            if (user.optString("gioi_tinh", "").equals("null")){
+                                edtGender.setText("Nam");
+                            }
+                            else {
+                                edtGender.setText(user.optString("gioi_tinh", ""));
+                            }
+                            if (user.optString("que_quan", "").equals("null")){
+                                edtProvince.setText("Chưa nhập");
+                            }
+                            else {
+                                edtProvince.setText(user.optString("que_quan", ""));
+                            }
+                            if (user.optString("trinh_do_hoc_van", "").equals("null")){
+                                edtEducationLevel.setText("Chưa nhập");
+                            }
+                            else {
+                                edtEducationLevel.setText(user.optString("trinh_do_hoc_van", ""));
+                            }
+//                            edtDateOfBirth.setText(user.optString("ngay_sinh", ""));
+//                            edtGender.setText(user.optString("gioi_tinh", ""));
+//                            edtProvince.setText(user.optString("que_quan", ""));
+//                            edtEducationLevel.setText(user.optString("trinh_do_hoc_van", ""));
                         }
                     } else {
                         Toast.makeText(getContext(), "Failed to load profile", Toast.LENGTH_SHORT).show();
@@ -345,6 +371,8 @@ public class fragment_profile  extends Fragment {
                 requireActivity().runOnUiThread(() -> {
                     if (response != null && response.optBoolean("success", false)) {
                         Toast.makeText(getContext(), "Profile updated successfully", Toast.LENGTH_SHORT).show();
+                        SharedPreferences prefs = requireActivity().getSharedPreferences("MyAppPrefs", Activity.MODE_PRIVATE);
+                        prefs.edit().putString("url_anh_dai_dien", uploadedImageUrl).apply();
                         cancelEdit();
                     } else {
                         Toast.makeText(getContext(), "Failed to update profile", Toast.LENGTH_SHORT).show();
@@ -360,6 +388,7 @@ public class fragment_profile  extends Fragment {
     }
 
     private void cancelEdit() {
+        fetchProfile(taiKhoanId);
         edtName.setEnabled(false);
         edtDateOfBirth.setEnabled(false);
         edtGender.setVisibility(View.VISIBLE);
@@ -370,7 +399,6 @@ public class fragment_profile  extends Fragment {
         imgProfilePicture.setEnabled(false);
         lloButtonEdit.setVisibility(View.GONE);
         lloTwoButton.setVisibility(View.VISIBLE);
-        fetchProfile(taiKhoanId);
     }
 
     private void changePassword(int taiKhoanId) {

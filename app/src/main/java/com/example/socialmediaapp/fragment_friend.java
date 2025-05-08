@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -39,6 +40,7 @@ public class fragment_friend extends Fragment implements MultiTypeAdapter.OnFrie
     MultiTypeAdapter adapterInvite, adapterFriend, adapter;
     private ArrayList<Object> results = new ArrayList<>();
     SearchView searchView;
+    ImageButton btnResetFriendList;
 
     @Nullable
     @Override
@@ -51,6 +53,8 @@ public class fragment_friend extends Fragment implements MultiTypeAdapter.OnFrie
         listViewInvite = view.findViewById(R.id.listViewInvite);
         listViewFriend = view.findViewById(R.id.listViewFriend);
         listView = view.findViewById(R.id.listViewUsers);
+        btnResetFriendList = view.findViewById(R.id.btnResetFriendList);
+        btnResetFriendList.setOnClickListener(v -> loadFriendInvites());
 
         SharedPreferences prefs = requireActivity().getSharedPreferences("MyAppPrefs", Activity.MODE_PRIVATE);
         taiKhoanId = prefs.getInt("tai_khoan_id", -1);

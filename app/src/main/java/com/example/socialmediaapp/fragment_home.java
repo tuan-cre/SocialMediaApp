@@ -165,8 +165,14 @@ public class fragment_home extends Fragment {
         lvPost_Home.setAdapter(mulAdapter);
         // Reset button functionality
         btnResetContent.setOnClickListener(v -> {
+            String new_url_anh_dai_dien = prefs.getString("url_anh_dai_dien", "");
+            if(TextUtils.isEmpty(new_url_anh_dai_dien))
+                imgAvatar_Home.setImageResource(R.drawable.default_profile_image);
+            else
+                upLoadImg.setImageToView(new_url_anh_dai_dien, imgAvatar_Home);
             txtContent_Home.setText("");
             resetImagePicker();
+            loadPosts(taiKhoanId);
         });
 
         // Initialize adapter and load posts

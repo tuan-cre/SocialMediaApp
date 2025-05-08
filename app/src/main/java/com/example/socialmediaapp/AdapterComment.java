@@ -39,6 +39,7 @@ public class AdapterComment extends ArrayAdapter<CommentItem> {
         TextView txtDate_CMT= view.findViewById(R.id.txtDate_CMT);
         TextView txtName_CMT = view.findViewById(R.id.txtName_CMT);
         TextView txtContent_CMT = view.findViewById(R.id.txtContent_CMT);
+        txtContent_CMT.setEnabled(false);
         ImageView imgAvatar_CMT = view.findViewById(R.id.imgAvatar_CMT);
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");

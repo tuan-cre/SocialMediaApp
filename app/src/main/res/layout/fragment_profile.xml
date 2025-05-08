@@ -64,7 +64,6 @@
             android:ems="10"
             android:enabled="false"
             android:inputType="text"
-            android:text="Name"
             android:textColor="@color/black"
             android:textSize="25sp" />
 
@@ -99,7 +98,6 @@
                     android:ems="10"
                     android:enabled="false"
                     android:inputType="text"
-                    android:text="Name"
                     android:textColor="@color/black" />
             </LinearLayout>
             <!-- Gender Field -->
@@ -154,7 +152,6 @@
                         android:ems="10"
                         android:enabled="false"
                         android:inputType="text"
-                        android:text="Name"
                         android:textColor="@color/black" />
                 </LinearLayout>
             </LinearLayout>
@@ -182,7 +179,6 @@
                     android:ems="10"
                     android:enabled="false"
                     android:inputType="text"
-                    android:text="Name"
                     android:textColor="@color/black" />
             </LinearLayout>
 
@@ -209,7 +205,6 @@
                     android:ems="10"
                     android:enabled="false"
                     android:inputType="text"
-                    android:text="Name"
                     android:textColor="@color/black" />
             </LinearLayout>
         </LinearLayout>

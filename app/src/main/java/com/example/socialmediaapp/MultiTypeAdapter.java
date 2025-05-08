@@ -109,6 +109,7 @@ public class MultiTypeAdapter extends ArrayAdapter<Object> {
                 LinearLayout llcomment = view.findViewById(R.id.lloComment);
                 TextView txtComment = view.findViewById(R.id.txtComment_Home);
                 Button btnSendComment = view.findViewById(R.id.btnSendComment);
+                TextView txtSoLike = view.findViewById(R.id.txtCount);
 
                 llcomment.setClickable(false);
                 llcomment.setFocusable(false);
@@ -123,6 +124,7 @@ public class MultiTypeAdapter extends ArrayAdapter<Object> {
                 lvComment.setVisibility(View.GONE);
                 txtComment.setVisibility(View.GONE);
                 btnSendComment.setVisibility(View.GONE);
+                txtSoLike.setVisibility(View.GONE);
             }
             else {
                 view = inflater.inflate(R.layout.activity_post_list_view_item, parent, false);
