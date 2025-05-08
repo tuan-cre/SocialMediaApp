@@ -9,10 +9,9 @@
         android:id="@+id/txtmessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/app_name"
         android:background="@drawable/bg_message"
-        android:textColor="@color/white"
         android:padding="10dp"
-        android:textSize="18sp"
-        />
+        android:text="@string/app_name"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
 </LinearLayout>

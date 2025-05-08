@@ -230,8 +230,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.2"
-                    android:gravity="center_vertical"
-                    android:text="Old Password" />
+                    android:text="Old Password"
+                    android:textSize="14sp" />
 
                 <EditText
                     android:id="@+id/edtOldPassword"
@@ -254,8 +254,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.2"
-                    android:gravity="center_vertical"
-                    android:text="New Password" />
+                    android:text="New Password"
+                    android:textSize="14sp" />
 
                 <EditText
                     android:id="@+id/edtNewPassword"
@@ -278,8 +278,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.2"
-                    android:gravity="center_vertical"
-                    android:text="Confirm Password" />
+                    android:text="Confirm Password"
+                    android:textSize="14sp" />
 
                 <EditText
                     android:id="@+id/edtConfirmNewPassword"
