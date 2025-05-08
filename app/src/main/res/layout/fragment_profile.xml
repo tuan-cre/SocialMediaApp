@@ -86,6 +86,7 @@
                     android:id="@+id/txtBirthDay"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
                     android:layout_weight="1"
                     android:text="Birth Day" />
 
@@ -93,6 +94,7 @@
                     android:id="@+id/edtDateOfBirth"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
                     android:layout_weight="2"
                     android:background="@null"
                     android:ems="10"
@@ -111,6 +113,7 @@
                     android:id="@+id/txtGender"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
                     android:layout_weight="1"
                     android:text="Gender" />
 
@@ -148,6 +151,7 @@
                         android:id="@+id/edtGender"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="start|center_vertical"
                         android:background="@null"
                         android:ems="10"
                         android:enabled="false"
@@ -167,6 +171,7 @@
                     android:id="@+id/txtProvince"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
                     android:layout_weight="1"
                     android:text="Province" />
 
@@ -174,6 +179,7 @@
                     android:id="@+id/edtProvince"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
                     android:layout_weight="2"
                     android:background="@null"
                     android:ems="10"
@@ -193,6 +199,7 @@
                     android:id="@+id/txtEducation"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
                     android:layout_weight="1"
                     android:text="Education Level" />
 
@@ -200,6 +207,7 @@
                     android:id="@+id/edtEducationLevel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
                     android:layout_weight="2"
                     android:background="@null"
                     android:ems="10"
@@ -229,6 +237,7 @@
                     android:id="@+id/txtOldPassword"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
                     android:layout_weight="1.2"
                     android:text="Old Password"
                     android:textSize="14sp" />
@@ -237,6 +246,7 @@
                     android:id="@+id/edtOldPassword"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="start"
                     android:layout_weight="1.8"
                     android:inputType="textPassword"
                     android:textColor="@color/black" />
@@ -253,6 +263,7 @@
                     android:id="@+id/txtNewPassword"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
                     android:layout_weight="1.2"
                     android:text="New Password"
                     android:textSize="14sp" />
@@ -261,6 +272,7 @@
                     android:id="@+id/edtNewPassword"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="start"
                     android:layout_weight="1.8"
                     android:inputType="textPassword"
                     android:textColor="@color/black" />
@@ -277,6 +289,7 @@
                     android:id="@+id/txtConfirmNewPassword"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
                     android:layout_weight="1.2"
                     android:text="Confirm Password"
                     android:textSize="14sp" />
@@ -285,6 +298,7 @@
                     android:id="@+id/edtConfirmNewPassword"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="start"
                     android:layout_weight="1.8"
                     android:inputType="textPassword"
                     android:textColor="@color/black" />
@@ -299,7 +313,8 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:padding="8dp">
+        android:padding="8dp"
+        android:visibility="visible">
 
         <LinearLayout
             android:id="@+id/lloTwoButton"
